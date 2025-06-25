@@ -1,5 +1,5 @@
 import React from 'react';
-import './Styless/navbar.css'; // or separate Navbar CSS if needed
+import './styless/navbar.css'; // Ensure path is correct
 
 function Navbar() {
     return (

@@ -6,13 +6,11 @@ const CommonGroupChatContent = () => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
 
-    // Load messages from localStorage when component mounts
     useEffect(() => {
         const savedMessages = JSON.parse(localStorage.getItem('commonChatMessages')) || [];
         setMessages(savedMessages);
     }, []);
 
-    // Save messages to localStorage whenever they change
     useEffect(() => {
         localStorage.setItem('commonChatMessages', JSON.stringify(messages));
     }, [messages]);

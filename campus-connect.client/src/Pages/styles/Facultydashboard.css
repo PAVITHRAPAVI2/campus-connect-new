@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.faculty-dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* This reverses layout to have sidebar on the right */
+.right-sidebar-layout {
+    flex-direction: row-reverse;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: #f9fafb;
+    padding: 2rem 1.5rem;
+    border-left: 1px solid #e5e7eb;
+}
+
+    .sidebar h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .sidebar nav ul {
+        list-style: none;
+    }
+
+        .sidebar nav ul li {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #374151;
+        }
+
+            .sidebar nav ul li.active,
+            .sidebar nav ul li:hover {
+                background-color: #e0f2fe;
+                color: #0284c7;
+            }
+
+/* Main area */
+.main {
+    flex: 1;
+    padding: 2rem;
+    background-color: #f3f4f6;
+}
+
+.topbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.user-info {
+    font-weight: 500;
+}
+
+.badge {
+    background-color: #dbeafe;
+    color: #1e3a8a;
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.5rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+}
+
+.welcome-banner {
+    background: linear-gradient(to right, #6366f1, #8b5cf6);
+    color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+    .welcome-banner h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+.cards-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.card {
+    flex: 1 1 180px;
+    background-color: white;
+    padding: 1.25rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+    .card p {
+        font-size: 1rem;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
+    }
+
+    .card h2 {
+        font-size: 2rem;
+    }
+
+    .card.blue h2 {
+        color: #2563eb;
+    }
+
+    .card.orange h2 {
+        color: #f97316;
+    }
+
+    .card.purple h2 {
+        color: #8b5cf6;
+    }
+
+    .card.green h2 {
+        color: #16a34a;
+    }
+
+.recent-activity h3 {
+    margin-bottom: 1rem;
+}
+
+.recent-activity ul {
+    list-style: none;
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.recent-activity li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+    .recent-activity li:last-child {
+        border-bottom: none;
+    }

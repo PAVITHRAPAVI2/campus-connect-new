@@ -1,32 +1,24 @@
-﻿/* Navbar container */
+/* Navbar styles */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #084c4c;
+    background-color: #084c4c; /* your primary teal */
     padding: 1rem 2rem;
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
 }
 
-/* Logo styling */
 .logo {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    color: white;
 }
 
-/* Navigation buttons */
 .nav-buttons {
     display: flex;
     gap: 1rem;
 }
 
-/* Base button style */
 .btn {
     padding: 0.5rem 1.2rem;
     font-size: 1rem;
@@ -35,9 +27,11 @@
     cursor: pointer;
     font-weight: 500;
     transition: background-color 0.3s ease;
+    line-height: 1.5;
+    white-space: nowrap; 
 }
 
-/* Login button */
+/* Login button style */
 .login-btn {
     background-color: white;
     color: #084c4c;
@@ -47,9 +41,9 @@
         background-color: #f3f4f6;
     }
 
-/* Sign Up button */
+/* Sign up button style */
 .signup-btn {
-    background-color: #10b981;
+    background-color: #10b981; /* mint green */
     color: white;
 }
 

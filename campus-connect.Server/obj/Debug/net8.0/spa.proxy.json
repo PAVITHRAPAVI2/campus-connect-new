@@ -3,7 +3,11 @@
 "ServerUrl": "https://localhost:50439",
 "RedirectUrl": "",
 "LaunchCommand": "npm run dev",
+<<<<<<< Updated upstream
 "WorkingDirectory": "C:\\Users\\ADMIN\\source\\repos\\campus-connect-new\\campus-connect.Server\\..\\campus-connect.client",
+=======
+"WorkingDirectory": "C:\\Users\\ASUS\\source\\New folder\\campus-connect.Server\\..\\campus-connect.client",
+>>>>>>> Stashed changes
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }

@@ -9,7 +9,7 @@ namespace CampusConnectAPI.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public required string CollegeId { get; set; }  // e.g., FAC2025001
+        public required string CollegeId { get; set; }
 
         [Required, EmailAddress]
         public required string Email { get; set; }

@@ -10,7 +10,7 @@ namespace CampusConnectAPI.Models
 
         [Required]
         public required string CollegeId { get; set; }
-
+            
         [Required, EmailAddress]
         public required string Email { get; set; }
 
@@ -33,3 +33,7 @@ namespace CampusConnectAPI.Models
         public string? Avatar { get; set; }
     }
 }
+
+
+// This class represents a student in the campus connect system, inheriting from AuditableEntity to include auditing properties.
+

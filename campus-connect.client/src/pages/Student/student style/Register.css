@@ -1,0 +1,122 @@
+/* Reset and box-sizing */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main container to center the box */
+.register-container {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, #eff6ff, #dbeafe);
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* Form card */
+.register-box {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+    /* Heading */
+    .register-box h2 {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    /* Subheading */
+    .register-box p {
+        text-align: center;
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 20px;
+    }
+
+/* Common input styles */
+.input {
+    width: 100%;
+    padding: 10px 14px;
+    padding-right: 42px; /* space for eye icon */
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    outline: none;
+    margin-bottom: 12px;
+}
+
+    .input:focus {
+        border-color: #1dd2d8;
+        background-color: #ffffff;
+    }
+
+/* Relative positioning for eye icon */
+.relative {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6b7280;
+}
+
+/* Button styling */
+button {
+    background-color: #1dd2d8;
+    color: white;
+    font-weight: 600;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 8px;
+}
+
+    button:hover {
+        background-color: #0fb3c0;
+    }
+
+/* Message (error/success) */
+.message {
+    margin-top: 10px;
+    text-align: center;
+    color: #dc2626;
+    font-size: 14px;
+}
+
+/* Full responsive styling */
+@media (max-width: 768px) {
+    .register-container {
+        padding: 10px;
+    }
+
+    .register-box {
+        padding: 20px;
+        max-width: 100%;
+        border-radius: 12px;
+        box-shadow: none;
+    }
+
+        .register-box h2 {
+            font-size: 20px;
+        }
+}

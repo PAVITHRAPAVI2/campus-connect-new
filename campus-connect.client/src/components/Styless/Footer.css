@@ -1,0 +1,9 @@
+/* Footer Styles */
+.footer {
+    background-color: #084c4c; /* Same as navbar for consistency */
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.95rem;
+    margin-top: auto;
+}

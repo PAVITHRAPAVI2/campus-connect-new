@@ -1,0 +1,85 @@
+﻿import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import './DashboardLayout.css';
+
+const DashboardLayout = ({ children }) => {
+    const [openChatDropdown, setOpenChatDropdown] = useState(false);
+
+    // In a real app, pull this from auth/context
+    const user = {
+        name: 'Dr. Sarah Johnson',
+        role: 'Student',
+        department: 'CS',
+    };
+
+    return (
+        <div className="dashboard-container">
+            {/* Top Navbar */}
+            <header className="navbar">
+                <div className="navbar-left">Campus Connect</div>
+                <div className="navbar-right">
+                    <span className="icon">🔔</span>
+                    <span className="icon">💬</span>
+                    <span className="user-info">
+                        {user.name}
+                        <span className="badge">{user.role}</span>
+                    </span>
+                </div>
+            </header>
+
+            {/* Main content + Right Sidebar */}
+            <div className="dashboard-body">
+                <main className="main-content">{children}</main>
+
+                <aside className="sidebar">
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/student">Dashboard</Link>
+                            </li>
+                            <li>
+                                <Link to="/student/notice-board">Notice Board</Link>
+                            </li>
+
+                            {/* Group Chat Dropdown */}
+                            <li>
+                                <button
+                                    className="dropdown-btn"
+                                    onClick={() => setOpenChatDropdown(!openChatDropdown)}
+                                >
+                                    Group Chat {openChatDropdown ? '▲' : '▼'}
+                                </button>
+
+                                {openChatDropdown && (
+                                    <ul className="dropdown-list">
+                                        <li>
+                                            <Link to="/chat/common">Common Chat</Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                to={`/chat/department/${user.department.toLowerCase()}`}
+                                            >
+                                                {user.department} Department Chat
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                )}
+                            </li>
+
+                            <li>
+                                <Link to="/student/events">View Events</Link>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
+            </div>
+
+            {/* Footer */}
+            <footer className="footer">
+                © 2024 Campus Connect. All rights reserved.
+            </footer>
+        </div>
+    );
+};
+
+export default DashboardLayout;

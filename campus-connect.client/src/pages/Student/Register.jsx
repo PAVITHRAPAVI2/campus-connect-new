@@ -63,8 +63,8 @@ function Register() {
             if (res.status === 200) {
                 toast.success(
                     ({ closeToast }) => (
-                        <div>
-                            <p className="font-semibold">Registration successful!</p>
+                        <div style={{ textAlign: 'center' }}>
+                            <p className="font-semibold">🎉 Registration successful!</p>
                             <p className="mb-2 text-sm opacity-80">You can now log in.</p>
                             <button
                                 className="px-3 py-1 rounded bg-blue-600 text-white"
@@ -77,7 +77,7 @@ function Register() {
                             </button>
                         </div>
                     ),
-                    { autoClose: false }
+                    { autoClose: false, position: "top-center" }
                 );
 
                 setForm({
@@ -95,7 +95,7 @@ function Register() {
                 err?.response?.data?.message ||
                 err?.response?.data ||
                 'Registration failed';
-            toast.error(msg);
+            toast.error(msg, { position: "top-center" });
         }
     };
 
@@ -210,7 +210,17 @@ function Register() {
             </div>
 
             <Footer />
-            <ToastContainer position="top-right" />
+            <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }

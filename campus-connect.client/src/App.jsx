@@ -5,6 +5,9 @@ import StudentApproval from './Pages/Admin/studentapproval.jsx';
 import ManageStudents from './Pages/Admin/usermanage.jsx';
 import ManageFaculty from './Pages/Admin/managefaculty.jsx';
 import NoticeBoard from './Pages/Admin/noticeboard.jsx';
+import Dashboard from './Pages/Admin/dashboard.jsx';
+import CommonGroupChatContent from './Pages/Admin/groupchat.jsx';
+
 
 const App = () => {
     return (
@@ -14,7 +17,9 @@ const App = () => {
             <Route path="/usermanagement" element={<ManageStudents />} />
             <Route path="/studentapproval" element={<StudentApproval />} />
             <Route path="/managefaculty" element={<ManageFaculty />} />
-            <Route path="/notices" element={<NoticeBoard/>} />
+            <Route path="/notices" element={<NoticeBoard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/groupchat" element={<CommonGroupChatContent />} />
         </Routes>
     );
 };

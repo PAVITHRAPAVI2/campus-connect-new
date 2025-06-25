@@ -1,15 +1,15 @@
 ﻿import React, { useState } from 'react';
-import './Styless/DashboardLayout.css';
-import { Link } from 'react-router-dom';
+import './Styles/DashboardLayout.css';
+import { Link, Outlet } from 'react-router-dom';
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = () => {
     const [openChatDropdown, setOpenChatDropdown] = useState(false);
 
-    // Replace with actual user info from context or props
+    // ✅ Get data from localStorage
     const user = {
-        name: 'Dr. Sarah Johnson',
+        name: localStorage.getItem('userName') || 'User',
         role: 'Faculty',
-        department: 'CS', // This can be dynamically loaded
+        department: 'CS', // You can later fetch this too from login/user data
     };
 
     return (
@@ -27,15 +27,16 @@ const DashboardLayout = ({ children }) => {
                 </div>
             </header>
 
-            {/* Main content + Right Sidebar */}
+            {/* Body layout */}
             <div className="dashboard-body">
-                <main className="main-content">{children}</main>
-
+                {/* Sidebar */}
                 <aside className="sidebar">
                     <nav>
                         <ul>
                             <li><Link to="/faculty">Dashboard</Link></li>
                             <li><Link to="/faculty/notice-board">Notice Board</Link></li>
+
+                            {/* Group Chat Dropdown */}
                             <li>
                                 <button
                                     className="dropdown-btn"
@@ -45,9 +46,7 @@ const DashboardLayout = ({ children }) => {
                                 </button>
                                 {openChatDropdown && (
                                     <ul className="dropdown-list">
-                                        <li>
-                                            <Link to="/groupchat">Common Chat</Link>
-                                        </li>
+                                        <li><Link to="/chat/common">Common Chat</Link></li>
                                         <li>
                                             <Link to={`/chat/department/${user.department.toLowerCase()}`}>
                                                 {user.department} Department Chat
@@ -56,11 +55,16 @@ const DashboardLayout = ({ children }) => {
                                     </ul>
                                 )}
                             </li>
+
                             <li><Link to="/faculty/student-approvals">Student Approvals</Link></li>
                         </ul>
-
                     </nav>
                 </aside>
+
+                {/* Main content */}
+                <main className="main-content">
+                    <Outlet />
+                </main>
             </div>
 
             {/* Footer */}

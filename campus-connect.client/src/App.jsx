@@ -1,29 +1,32 @@
+﻿// Importing necessary modules from React and react-router-dom
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './Pages/student/login.jsx';
-import StudentApproval from './Pages/Admin/studentapproval.jsx';
-import ManageStudents from './Pages/Admin/usermanage.jsx';
-import ManageFaculty from './Pages/Admin/managefaculty.jsx';
-import NoticeBoard from './Pages/Admin/noticeboard.jsx';
-import LandingPage from './components/LandingPage';
-import FacultyDashboard from './Pages/Faculty/Facultydashboard';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Importing page components
+import LandingPage from './pages/Faculty/LandingPage';
+import NoticeBoard from './components/NoticeBoard';
+import StudentApproval from './components/StudentApproval';
 import DashboardLayout from './components/DashboardLayout';
-import GroupChat from './Pages/Faculty/GroupChat';
+import LoginPage from './components/LoginPage';
+import CommonGroupChat from './components/CommonGroupChat';
 
 const App = () => {
     return (
-        <Routes>
-            <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/usermanagement" element={<ManageStudents />} />
-            <Route path="/studentapproval" element={<StudentApproval />} />
-            <Route path="/managefaculty" element={<ManageFaculty />} />
-            <Route path="/notices" element={<NoticeBoard />} />
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/faculty" element={< FacultyDashboard />} />
-            <Route path="/DashboardLayout" element={< DashboardLayout />} />
-            <Route path="/Groupchat" element={< GroupChat />} />
-        </Routes>
+        <Router>
+            <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+
+                {/* Faculty Dashboard Routes */}
+                <Route path="/faculty" element={<DashboardLayout />}>
+                    <Route path="notice-board" element={<NoticeBoard />} />
+                    <Route path="student-approvals" element={<StudentApproval />} />
+                    <Route path="group-chat" element={<CommonGroupChat />} /> 
+                    {/* You can add a default dashboard page with <Route index element={<DashboardHome />} /> */}
+                </Route>
+            </Routes>
+        </Router>
     );
 };
 

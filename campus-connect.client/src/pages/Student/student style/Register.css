@@ -5,7 +5,7 @@
     padding: 0;
 }
 
-/* Main container */
+/* Main container to center the box */
 .register-container {
     min-height: 100vh;
     width: 100vw;
@@ -17,7 +17,7 @@
     overflow-x: hidden;
 }
 
-/* Register form box */
+/* Form card */
 .register-box {
     background-color: #ffffff;
     padding: 30px;
@@ -28,7 +28,7 @@
     margin: 0 auto;
 }
 
-    /* Heading styles */
+    /* Heading */
     .register-box h2 {
         text-align: center;
         font-size: 24px;
@@ -44,11 +44,11 @@
         margin-bottom: 20px;
     }
 
-/* Input fields */
+/* Common input styles */
 .input {
     width: 100%;
     padding: 10px 14px;
-    padding-right: 42px;
+    padding-right: 42px; /* space for eye icon */
     border: 1px solid #d1d5db;
     border-radius: 8px;
     background-color: #f9f9f9;
@@ -63,7 +63,7 @@
         background-color: #ffffff;
     }
 
-/* Relative wrapper for eye icon */
+/* Relative positioning for eye icon */
 .relative {
     position: relative;
 }
@@ -77,7 +77,7 @@
     color: #6b7280;
 }
 
-/* Submit button */
+/* Button styling */
 button {
     background-color: #1dd2d8;
     color: white;
@@ -95,12 +95,7 @@ button {
         background-color: #0fb3c0;
     }
 
-/* Toast override (optional center alignment) */
-.Toastify__toast {
-    text-align: center;
-}
-
-/* Message feedback (errors, etc.) */
+/* Message (error/success) */
 .message {
     margin-top: 10px;
     text-align: center;
@@ -108,7 +103,7 @@ button {
     font-size: 14px;
 }
 
-/* Mobile responsive */
+/* Full responsive styling */
 @media (max-width: 768px) {
     .register-container {
         padding: 10px;

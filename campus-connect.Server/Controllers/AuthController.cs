@@ -4,8 +4,10 @@ using campus_connect.Server.Model.Services;
 using CampusConnectAPI.Data;
 using CampusConnectAPI.Models;
 using CampusConnectAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 
 namespace CampusConnectAPI.Controllers
@@ -23,6 +25,8 @@ namespace CampusConnectAPI.Controllers
             _jwt = jwt;
             _emailService = emailService;
         }
+
+
 
         //  Student Registration Only
         [HttpPost("register-student")]
@@ -43,7 +47,7 @@ namespace CampusConnectAPI.Controllers
                 Department = dto.Department,
                 Batch = dto.Batch,
                 Role = "student",
-                IsApproved = true,
+                IsApproved = false, //  Student must be approved before login
                 CreatedBy = dto.CollegeId,
                 UpdatedBy = dto.CollegeId
             };
@@ -51,8 +55,10 @@ namespace CampusConnectAPI.Controllers
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
 
-            return Ok("Student registered successfully.");
+            // (Optional) Send email to department faculty for approval
+            return Ok("Student registered successfully. Awaiting faculty approval.");
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
@@ -61,10 +67,11 @@ namespace CampusConnectAPI.Controllers
 
             object? user = null;
             string role = "", storedHash = "", email = "", userId = "", userName = "", department = "";
+            bool isApproved = true; // Default true for admin
 
             var collegeId = dto.CollegeId.Trim();
 
-            //  Try Student
+            // 1. Try Student
             var student = await _context.Students.FirstOrDefaultAsync(s => s.CollegeId == collegeId && !s.IsDeleted);
             if (student != null)
             {
@@ -75,9 +82,10 @@ namespace CampusConnectAPI.Controllers
                 userId = student.CollegeId;
                 userName = student.FullName;
                 department = student.Department;
+                isApproved = student.IsApproved;
             }
 
-            //  Try Faculty
+            // 2. Try Faculty
             if (user == null)
             {
                 var faculty = await _context.Faculties.FirstOrDefaultAsync(f => f.CollegeId == collegeId && !f.IsDeleted);
@@ -90,10 +98,11 @@ namespace CampusConnectAPI.Controllers
                     userId = faculty.CollegeId;
                     userName = faculty.FullName;
                     department = faculty.Department;
+                    isApproved = faculty.IsApproved;
                 }
             }
 
-            //  Try Admin
+            // 3. Try Admin
             if (user == null)
             {
                 var admin = await _context.Admins.FirstOrDefaultAsync(a => a.CollegeId == collegeId && !a.IsDeleted);
@@ -105,7 +114,8 @@ namespace CampusConnectAPI.Controllers
                     email = admin.Email;
                     userId = admin.CollegeId;
                     userName = admin.FullName;
-                    department = admin.Department ?? "Administration"; // in case admin has no department
+                    department = admin.Department ?? "Administration";
+                    isApproved = true; // Admins don't need approval
                 }
             }
 
@@ -115,7 +125,11 @@ namespace CampusConnectAPI.Controllers
             if (string.IsNullOrEmpty(storedHash) || !BCrypt.Net.BCrypt.Verify(dto.Password, storedHash))
                 return Unauthorized("Incorrect password");
 
-            //  Generate token with all required values
+            //  Approval check for students/faculties
+            if ((role == "student" || role == "faculty") && !isApproved)
+                return Unauthorized("Your account is pending approval.");
+
+            //  Generate token
             var token = _jwt.GenerateToken(userId, userName, email, role, department);
 
             var response = new LoginResponseDto
@@ -135,71 +149,170 @@ namespace CampusConnectAPI.Controllers
 
 
 
-        [HttpPost("send-reset-token")]
-        public async Task<IActionResult> SendResetToken([FromBody] EmailDto dto)
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
-            var email = dto.Email;
-            var student = await _context.Students.FirstOrDefaultAsync(s => s.Email == email && !s.IsDeleted);
-            if (student == null)
+            if (string.IsNullOrWhiteSpace(dto.Email))
+                return BadRequest("Email is required.");
+
+            string email = dto.Email.Trim().ToLower();
+
+            // Lookup user from any of the 3 roles
+            object? user = await _context.Students.FirstOrDefaultAsync(u => u.Email.ToLower() == email && !u.IsDeleted);
+
+            if (user == null)
+                user = await _context.Faculties.FirstOrDefaultAsync(f => f.Email.ToLower() == email && !f.IsDeleted);
+
+            if (user == null)
+                user = await _context.Admins.FirstOrDefaultAsync(a => a.Email.ToLower() == email && !a.IsDeleted);
+
+            if (user == null)
                 return NotFound("Email not found.");
 
-            string otp = Guid.NewGuid().ToString().Substring(0, 6).ToUpper();
+            
+            var recentToken = await _context.PasswordResetTokens
+                .Where(t => t.Email.ToLower() == email && !t.IsUsed)
+                .OrderByDescending(t => t.CreatedAt)
+                .FirstOrDefaultAsync();
 
-            var resetToken = new PasswordResetToken
+            if (recentToken != null && recentToken.CreatedAt > DateTime.UtcNow.AddMinutes(-2))
+                return BadRequest("Please wait before requesting another OTP.");
+
+            
+            var rng = new Random();
+            string otp = rng.Next(100000, 999999).ToString();
+
+            var token = new PasswordResetToken
             {
                 Email = email,
-                Token = otp,
-                ExpiryTime = DateTime.UtcNow.AddMinutes(10)
+                Otp = otp,
+                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(10),
+                IsUsed = false
             };
 
-            _context.PasswordResetTokens.Add(resetToken);
+            _context.PasswordResetTokens.Add(token);
             await _context.SaveChangesAsync();
 
-            await _emailService.SendEmailAsync(email, "Campus Connect - Password Reset OTP",
-                $"<p>Hello {student.FullName},</p><p>Your OTP to reset your password is:</p><h2>{otp}</h2><p>This OTP expires in 10 minutes.</p>");
+            await _emailService.SendEmailAsync(
+                email,
+                "Your OTP for Campus Connect Password Reset",
+                $"<p>Your OTP is: <strong>{otp}</strong></p><p>This OTP is valid for 10 minutes.</p>"
+            );
 
-            return Ok("OTP sent to your email.");
+            return Ok("OTP has been sent to your email.");
         }
 
 
 
+
+
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto dto)
+        {
+            var token = await _context.PasswordResetTokens
+                .FirstOrDefaultAsync(t => t.Email == dto.Email && t.Otp == dto.Otp && !t.IsUsed && t.ExpiresAt > DateTime.UtcNow);
+
+            if (token == null)
+                return BadRequest("Invalid or expired OTP.");
+
+            token.IsUsed = true;
+            await _context.SaveChangesAsync();
+
+            return Ok("OTP verified. You can now reset your password.");
+        }
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Email) ||
-                string.IsNullOrWhiteSpace(dto.Token) ||
-                string.IsNullOrWhiteSpace(dto.NewPassword))
-            {
-                return BadRequest("All fields are required.");
-            }
+            if (dto.NewPassword != dto.ConfirmPassword)
+                return BadRequest("Passwords do not match.");
 
-            var student = await _context.Students
-                .FirstOrDefaultAsync(s => s.Email == dto.Email && !s.IsDeleted);
+            var user = await _context.Students.FirstOrDefaultAsync(u => u.Email == dto.Email && !u.IsDeleted);
+            if (user == null)
+                return NotFound("User not found.");
 
-            if (student == null)
-            {
-                return NotFound("Student not found.");
-            }
-
-            // Validate the token — you should store & verify token securely.
-            var storedToken = await _context.PasswordResetTokens
-                .FirstOrDefaultAsync(t => t.Email == dto.Email && t.Token == dto.Token && !t.IsUsed);
-
-            if (storedToken == null || storedToken.ExpiryTime < DateTime.UtcNow)
-            {
-                return BadRequest("Invalid or expired token.");
-            }
-
-            // Update password (you should hash it with BCrypt or similar)
-            student.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-            storedToken.IsUsed = true;
-            storedToken.UsedOn = DateTime.UtcNow;
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
-            return Ok("Password reset successful.");
+            return Ok("Password reset successfully.");
         }
 
+
+
+
+
+
+        [HttpGet("profile")]
+        //[Authorize]
+        public async Task<IActionResult> GetProfile()
+        {
+            var collegeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (string.IsNullOrEmpty(collegeId) || string.IsNullOrEmpty(role))
+                return Unauthorized("Invalid token");
+
+            object? userProfile = null;
+
+            if (role == "student")
+            {
+                userProfile = await _context.Students
+                    .Where(s => s.CollegeId == collegeId && !s.IsDeleted)
+                    .Select(s => new
+                    {
+                        s.Id,
+                        s.CollegeId,
+                        s.FullName,
+                        s.Email,
+                        s.Department,
+                        s.Batch,
+                        s.Role,
+                        s.Avatar,
+                        s.IsApproved,
+                        s.CreatedAt
+                    }).FirstOrDefaultAsync();
+            }
+            else if (role == "faculty")
+            {
+                userProfile = await _context.Faculties
+                    .Where(f => f.CollegeId == collegeId && !f.IsDeleted)
+                    .Select(f => new
+                    {
+                        f.Id,
+                        f.CollegeId,
+                        f.FullName,
+                        f.Email,
+                        f.Department,
+                        f.Role,
+                        f.IsApproved,
+                        f.CreatedAt
+                    }).FirstOrDefaultAsync();
+            }
+            else if (role == "admin")
+            {
+                userProfile = await _context.Admins
+                    .Where(a => a.CollegeId == collegeId && !a.IsDeleted)
+                    .Select(a => new
+                    {
+                        a.Id,
+                        a.CollegeId,
+                        a.FullName,
+                        a.Email,
+                        a.Department,
+                        a.Role,
+                        a.CreatedAt
+                    }).FirstOrDefaultAsync();
+            }
+
+            if (userProfile == null)
+                return NotFound("User not found");
+
+            return Ok(userProfile);
+        }
 
 
     }

@@ -18,9 +18,7 @@ namespace CampusConnectAPI.Services
         {
             var jwtKey = _config["Jwt:Key"];
             if (string.IsNullOrEmpty(jwtKey))
-            {
                 throw new ArgumentNullException(nameof(jwtKey), "Jwt:Key configuration value cannot be null or empty.");
-            }
 
             var claims = new[]
             {
@@ -28,7 +26,7 @@ namespace CampusConnectAPI.Services
                 new Claim(ClaimTypes.Name, userName),
                 new Claim(ClaimTypes.Email, email),
                 new Claim(ClaimTypes.Role, role),
-                new Claim("department", department) // custom claim
+                new Claim("Department", department) // 🔥 case-sensitive key
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));

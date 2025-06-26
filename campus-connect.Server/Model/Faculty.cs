@@ -24,6 +24,7 @@ namespace CampusConnectAPI.Models
         public required string Department { get; set; }
 
         public string Role { get; set; } = "faculty";
+
         public bool IsApproved { get; set; } = true;
     }
 }

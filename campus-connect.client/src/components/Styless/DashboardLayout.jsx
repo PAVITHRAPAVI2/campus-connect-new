@@ -6,6 +6,7 @@ const DashboardLayout = ({ children }) => {
     const [openChatDropdown, setOpenChatDropdown] = useState(false);
 
     // In a real app, pull this from auth/context
+    
     const user = {
         name: 'Dr. Sarah Johnson',
         role: 'Student',

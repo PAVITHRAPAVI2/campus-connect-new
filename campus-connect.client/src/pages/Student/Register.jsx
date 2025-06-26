@@ -5,6 +5,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Styless/Navbar';
 import Footer from '../../components/Styless/Footer';
 import '../../Pages/Student/student style/Register.css';
 import config from '../../config';
@@ -101,6 +102,7 @@ function Register() {
 
     return (
         <>
+            <Navbar/>
             <div className="register-container">
                 <div className="register-box">
                     <h2>Student Register</h2>

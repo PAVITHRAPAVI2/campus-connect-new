@@ -1,2 +1,2 @@
-const BASE_URL = 'https://campusconnect.runasp.net/api';
+const BASE_URL = 'https://campusconnect.tryasp.net/api';
 export default BASE_URL;

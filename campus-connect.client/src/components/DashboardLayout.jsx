@@ -1,20 +1,33 @@
-﻿import React, { useState } from 'react';
-import './Styles/DashboardLayout.css';
-import { Link, Outlet } from 'react-router-dom';
+﻿// src/components/DashboardLayout.jsx
+import React, { useState, useEffect } from 'react';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import './styles/DashboardLayout.css';
 
 const DashboardLayout = () => {
     const [openChatDropdown, setOpenChatDropdown] = useState(false);
+    const navigate = useNavigate();
 
-    // Sample user data – replace with actual context or API data
+    useEffect(() => {
+        const role = localStorage.getItem('userRole');
+        const token = localStorage.getItem('token');
+        if (!token || role?.toLowerCase() !== 'faculty') {
+            navigate('/login');
+        }
+    }, [navigate]);
+
     const user = {
-        name: 'Dr. Sarah Johnson',
-        role: 'Faculty',
-        department: 'CS',
+        name: localStorage.getItem('userName') || 'User',
+        role: localStorage.getItem('userRole') || 'Unknown',
+        department: localStorage.getItem('userDepartment') || 'CSE',
+    };
+
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/login');
     };
 
     return (
         <div className="dashboard-container">
-            {/* Top Navbar */}
             <header className="navbar">
                 <div className="navbar-left">Campus Connect</div>
                 <div className="navbar-right">
@@ -27,16 +40,12 @@ const DashboardLayout = () => {
                 </div>
             </header>
 
-            {/* Body layout */}
             <div className="dashboard-body">
-                {/* Sidebar */}
                 <aside className="sidebar">
                     <nav>
                         <ul>
                             <li><Link to="/faculty">Dashboard</Link></li>
                             <li><Link to="/faculty/notice-board">Notice Board</Link></li>
-
-                            {/* Group Chat Dropdown */}
                             <li>
                                 <button
                                     className="dropdown-btn"
@@ -46,7 +55,7 @@ const DashboardLayout = () => {
                                 </button>
                                 {openChatDropdown && (
                                     <ul className="dropdown-list">
-                                        <li><Link to="/chat/common">Common Chat</Link></li>
+                                        <li><Link to="/faculty/group-chat">Common Chat</Link></li>
                                         <li>
                                             <Link to={`/chat/department/${user.department.toLowerCase()}`}>
                                                 {user.department} Department Chat
@@ -55,19 +64,22 @@ const DashboardLayout = () => {
                                     </ul>
                                 )}
                             </li>
-
                             <li><Link to="/faculty/student-approvals">Student Approvals</Link></li>
+                            <li><Link to="/faculty/manage-students">Manage Students</Link></li>
+                            <li>
+                                <button className="logout-btn" onClick={handleLogout}>
+                                    Logout
+                                </button>
+                            </li>
                         </ul>
                     </nav>
                 </aside>
 
-                {/* Main content (renders nested routes here) */}
                 <main className="main-content">
-                    <Outlet /> {/* This renders the nested route components */}
+                    <Outlet />
                 </main>
             </div>
 
-            {/* Footer */}
             <footer className="footer">
                 © 2024 Campus Connect. All rights reserved.
             </footer>

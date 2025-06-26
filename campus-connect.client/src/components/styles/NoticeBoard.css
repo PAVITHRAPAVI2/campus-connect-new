@@ -1,4 +1,4 @@
-.noticeboard-container {
+﻿.noticeboard-container {
     padding: 24px 32px;
     background-color: #f9fafb;
     min-height: 100vh;
@@ -20,14 +20,24 @@
     background-color: #1d4ed8;
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 5px 12px;
     border-radius: 6px;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: 13px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.3s ease;
+    max-width: fit-content;
+    height: 32px;
 }
+
+    .create-btn:hover {
+        background-color: #1749b3;
+    }
+
 
 .noticeboard-container p {
     margin-bottom: 16px;
@@ -227,5 +237,6 @@
 
     .create-btn {
         padding: 6px 12px;
+        font-size: 13px;
     }
 }

@@ -1,3 +1,4 @@
+/* Container */
 .approval-container {
     padding: 32px;
     background-color: #f9fafb;
@@ -15,8 +16,10 @@
     color: #64748b;
 }
 
+/* Filters */
 .filters {
     display: flex;
+    flex-wrap: wrap;
     gap: 14px;
     margin-bottom: 20px;
 }
@@ -27,14 +30,16 @@
         border: 1px solid #cbd5e1;
         border-radius: 8px;
         font-size: 14px;
-        width: 200px;
+        width: 220px;
     }
 
+/* Table */
 .approval-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
+    background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
 }
 
     .approval-table th,
@@ -42,8 +47,10 @@
         padding: 14px;
         text-align: left;
         border-bottom: 1px solid #e2e8f0;
+        font-size: 14px;
     }
 
+/* User Info */
 .user-info {
     display: flex;
     align-items: center;
@@ -72,11 +79,13 @@
     color: #64748b;
 }
 
+/* Status Badges */
 .status {
     padding: 6px 10px;
     border-radius: 6px;
     font-weight: 500;
     font-size: 14px;
+    text-align: center;
 }
 
     .status.approved {
@@ -94,21 +103,97 @@
         color: #b91c1c;
     }
 
-.btn {
-    padding: 6px 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 13px;
-    cursor: pointer;
-    margin-right: 6px;
+/* Icon Buttons */
+.icon-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-start;
 }
 
-    .btn.approve {
-        background-color: #16a34a;
-        color: white;
+.icon {
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+    .icon.approve {
+        color: #16a34a;
     }
 
-    .btn.reject {
-        background-color: #dc2626;
-        color: white;
+    .icon.reject {
+        color: #dc2626;
     }
+
+    .icon.approve:hover {
+        color: #15803d;
+        transform: scale(1.1);
+    }
+
+    .icon.reject:hover {
+        color: #b91c1c;
+        transform: scale(1.1);
+    }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .approval-container {
+        padding: 16px;
+    }
+
+        .approval-container h2 {
+            font-size: 22px;
+        }
+
+    .filters {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .filters input,
+        .filters select {
+            width: 100%;
+        }
+
+    .approval-table th,
+    .approval-table td {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .icon {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .approval-container h2 {
+        font-size: 20px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+
+    .approval-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .icon-buttons {
+        justify-content: center;
+        gap: 20px;
+    }
+}

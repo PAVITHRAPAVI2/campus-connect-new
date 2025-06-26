@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import './styles/StudentApproval.css';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 const dummyStudents = [
     {
@@ -38,17 +39,16 @@ const StudentApproval = () => {
     const [statusFilter, setStatusFilter] = useState('All Status');
 
     useEffect(() => {
-        setStudents(dummyStudents); // Replace with API call in real app
+        setStudents(dummyStudents); // Replace with API call
     }, []);
 
-    const getInitials = (name) => {
-        return name
+    const getInitials = (name) =>
+        name
             .split(' ')
             .map((w) => w[0])
             .join('')
             .toUpperCase()
             .slice(0, 2);
-    };
 
     const updateStatus = (id, newStatus) => {
         const updated = students.map((student) =>
@@ -122,20 +122,18 @@ const StudentApproval = () => {
                             <td>{student.joinDate}</td>
                             <td>
                                 {student.status === 'Pending' ? (
-                                    <>
-                                        <button
-                                            className="btn approve"
+                                    <div className="icon-buttons">
+                                        <FaCheckCircle
+                                            className="icon approve"
+                                            title="Approve"
                                             onClick={() => updateStatus(student.id, 'Approved')}
-                                        >
-                                            Approve
-                                        </button>
-                                        <button
-                                            className="btn reject"
+                                        />
+                                        <FaTimesCircle
+                                            className="icon reject"
+                                            title="Reject"
                                             onClick={() => updateStatus(student.id, 'Rejected')}
-                                        >
-                                            Reject
-                                        </button>
-                                    </>
+                                        />
+                                    </div>
                                 ) : (
                                     <span>{student.status}</span>
                                 )}

@@ -1,16 +1,16 @@
 ﻿import React from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ Navigation
+import { useNavigate } from 'react-router-dom';
 import "../../components/styles/LandingPage.css";
 import landingbg from '../../assets/landingbgimage.png';
 import Navbar from '../../components/Navbar';
 
 const LandingPage = () => {
     const navigate = useNavigate();
-    const userName = localStorage.getItem('userName'); // ✅ get name from localStorage
+    const userName = localStorage.getItem('userName');
 
     const handleGetStarted = () => {
         if (userName) {
-            navigate('/faculty'); // Already logged in
+            navigate('/faculty');
         } else {
             navigate('/login');
         }
@@ -35,7 +35,6 @@ const LandingPage = () => {
                 </div>
             </div>
 
-            {/* Features Section */}
             <div className="features-section">
                 <h2>Discover the Power of Campus Connect</h2>
                 <p>
@@ -59,7 +58,6 @@ const LandingPage = () => {
                 </div>
             </div>
 
-            {/* Call to Action */}
             <div className="cta-section">
                 <h2>Ready to Get Connected?</h2>
                 <p>Join Campus Connect today and start exploring your campus community.</p>

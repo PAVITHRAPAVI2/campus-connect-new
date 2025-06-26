@@ -1,0 +1,280 @@
+﻿Layout
+────────────────────────────────*/
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    background: #f4f6f9;
+}
+
+.register-box {
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+    .register-box h2 {
+        margin-bottom: 0.5rem;
+        font-size: 1.5rem;
+        text-align: center;
+        color: #333;
+    }
+
+    .register-box p {
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        text-align: center;
+        color: #666;
+    }
+
+/* ─────────────────────────────
+   Form inputs
+────────────────────────────────*/
+.input {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    background: #fdfdfd;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+    .input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    }
+
+/* eye icon */
+.relative {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    color: #888;
+    cursor: pointer;
+}
+
+/* ─────────────────────────────
+   Button + link
+────────────────────────────────*/
+button {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    background: #2563eb;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+
+    button:hover {
+        background: #1f4fcb;
+    }
+
+.to-login {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.link {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+    .link:hover {
+        text-decoration: none;
+    }
+
+/* ─────────────────────────────
+   Toast banner inside form
+────────────────────────────────*/
+.form-toast-container {
+    margin-top: 1rem;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center;
+}
+
+.form-toast {
+    width: 100% !important;
+    background: #fff3cd !important; /* pale yellow */
+    border: 1px solid #ffeeba !important;
+    color: #856404 !important;
+    padding: 10px 15px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+    font-size: 0.95rem !important;
+}
+
+.form-toast-body {
+    text-align: center;
+}
+
+/* ─────────────────────────────
+   Responsive tweaks
+────────────────────────────────*/
+@media (max-width: 768px) {
+    .register-box {
+        padding: 1.5rem;
+    }
+
+    .input {
+        font-size: 0.9rem;
+    }
+
+    button {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-box h2 {
+        font-size: 1.25rem;
+    }
+
+    .register-box p {
+        font-size: 0.85rem;
+    }
+
+    .input, button {
+        font-size: 0.85rem;
+    }
+}
+
+/* Hide container when registered */
+.hidden {
+    display: none;
+}
+
+/* Success message overlay */
+.success-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.success-box {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    animation: fadeInPop 0.3s ease-in-out;
+}
+
+@keyframes fadeInPop {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Toast inside form box */
+.form-toast-container {
+    position: relative !important;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.form-toast {
+    background: #fff;
+    color: #333;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
+}
+
+.form-toast-body {
+    text-align: center;
+    padding: 0.75rem;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-box {
+    background: #fff;
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: fadeInPop 0.3s ease-in-out;
+}
+
+.modal-icon {
+    width: 60px;
+    margin-bottom: 1rem;
+}
+
+.modal-box h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: #2e7d32;
+}
+
+.modal-box p {
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.modal-btn {
+    margin-top: 1.5rem;
+    padding: 10px 20px;
+    font-weight: bold;
+    background-color: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .modal-btn:hover {
+        background-color: #1f4fcb;
+    }
+
+@keyframes fadeInPop {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

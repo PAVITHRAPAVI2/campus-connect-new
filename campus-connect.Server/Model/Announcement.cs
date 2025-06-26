@@ -1,16 +1,23 @@
-﻿namespace campus_connect.Server.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CampusConnectAPI.Models
 {
     public class Announcement
     {
         public int Id { get; set; }
-        public required string Title { get; set; }
-        public required string Description { get; set; }
-        public required string PostedBy { get; set; }
-        public DateTime PostedOn { get; set; }
+
+        [Required]
+        public string Title { get; set; } = string.Empty;
+
+        [Required]
+        public string Description { get; set; } = string.Empty;
+
+        [Required]
+        public string PostedBy { get; set; } = string.Empty;
+
+        public DateTime PostedOn { get; set; } = DateTime.UtcNow;
 
         // Optional: image or file attachment
-        public required string AttachmentUrl { get; set; }
+        public string AttachmentUrl { get; set; } = string.Empty;
     }
-
-
 }

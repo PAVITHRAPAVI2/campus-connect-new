@@ -9,7 +9,7 @@ namespace CampusConnectAPI.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public required string CollegeId { get; set; }  // e.g., ADM2025001
+        public required string CollegeId { get; set; }
 
         [Required, EmailAddress]
         public required string Email { get; set; }
@@ -22,6 +22,9 @@ namespace CampusConnectAPI.Models
 
         public string Role { get; set; } = "admin";
 
-        public bool IsApproved { get; set; } = false ;
+        public bool IsApproved { get; set; } = false;
+
+        // ✅ Add this to fix the 500 error
+        public new bool IsDeleted { get; set; } = false;
     }
 }

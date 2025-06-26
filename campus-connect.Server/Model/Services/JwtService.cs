@@ -14,7 +14,7 @@ namespace CampusConnectAPI.Services
             _config = config;
         }
 
-        public string GenerateToken(string collegeId, string email, string role)
+        public string GenerateToken(string collegeId, string email, string role, string department)
         {
             var jwtKey = _config["Jwt:Key"];
             if (string.IsNullOrEmpty(jwtKey))
@@ -24,10 +24,12 @@ namespace CampusConnectAPI.Services
 
             var claims = new[]
             {
-                    new Claim(ClaimTypes.NameIdentifier, collegeId),
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Role, role)
-                };
+        new Claim(ClaimTypes.NameIdentifier, collegeId),  // For User.Identity.Name
+        new Claim(ClaimTypes.Name, collegeId),
+        new Claim(ClaimTypes.Email, email),
+        new Claim(ClaimTypes.Role, role),
+        new Claim("Department", department)               // ✅ Add department claim
+    };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -36,11 +38,12 @@ namespace CampusConnectAPI.Services
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:ExpireMinutes"])),
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:ExpireMinutes"] ?? "60")),
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }

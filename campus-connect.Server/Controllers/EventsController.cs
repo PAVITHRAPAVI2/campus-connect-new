@@ -1,33 +1,26 @@
-﻿using campus_connect.Server.Model;
-using CampusConnectAPI.Data;
+﻿using CampusConnectAPI.Data;
 using CampusConnectAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CampusConnectAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class EventsController : ControllerBase
+    [Route("api/[controller]")]
+    public class EventController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public EventsController(AppDbContext context)
+        public EventController(AppDbContext context)
         {
             _context = context;
         }
 
-        /// <summary>
-        /// Get all events ordered by event date descending.
-        /// </summary>
+        // 🔓 GET: api/event (Public)
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
+        public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents()
         {
             var events = await _context.Events
                 .OrderByDescending(e => e.EventDate)
@@ -36,73 +29,69 @@ namespace CampusConnectAPI.Controllers
             return Ok(events);
         }
 
-        /// <summary>
-        /// Get a specific event by ID.
-        /// </summary>
+        // 🔓 GET: api/event/5 (Public)
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<Event>> GetEvent(int id)
         {
-            var ev = await _context.Events.FindAsync(id);
+            var evnt = await _context.Events.FindAsync(id);
+            if (evnt == null)
+                return NotFound(new { Message = "Event not found" });
 
-            if (ev == null)
-                return NotFound($"Event with ID {id} not found.");
-
-            return Ok(ev);
+            return Ok(evnt);
         }
 
-        /// <summary>
-        /// Create a new event (Admin only).
-        /// </summary>
+        // 🔐 POST: api/event (Only admin/faculty)
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Event>> CreateEvent(Event ev)
+        [Authorize(Roles = "admin,faculty")]
+        public async Task<ActionResult<Event>> CreateEvent([FromBody] Event evnt)
         {
-            ev.CreatedOn = DateTime.UtcNow;
-            ev.CreatedBy = User?.Identity?.Name ?? "System";
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            _context.Events.Add(ev);
+            evnt.CreatedOn = DateTime.UtcNow;
+            evnt.CreatedBy = User?.Identity?.Name ?? "System";
+
+            _context.Events.Add(evnt);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetEvent), new { id = ev.Id }, ev);
+            return CreatedAtAction(nameof(GetEvent), new { id = evnt.Id }, evnt);
         }
 
-        /// <summary>
-        /// Update an existing event (Admin only).
-        /// </summary>
+        // 🔐 PUT: api/event/5 (Only admin/faculty)
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateEvent(int id, Event ev)
+        [Authorize(Roles = "admin,faculty")]
+        public async Task<IActionResult> UpdateEvent(int id, [FromBody] Event evnt)
         {
-            if (id != ev.Id)
-                return BadRequest("Event ID mismatch.");
+            if (id != evnt.Id)
+                return BadRequest(new { Message = "Event ID mismatch" });
 
-            var existingEvent = await _context.Events.FindAsync(id);
-            if (existingEvent == null)
-                return NotFound($"Event with ID {id} not found.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            // Update only the editable fields
-            existingEvent.Title = ev.Title;
-            existingEvent.Description = ev.Description;
-            existingEvent.PosterUrl = ev.PosterUrl;
-            existingEvent.EventDate = ev.EventDate;
+            var existing = await _context.Events.FindAsync(id);
+            if (existing == null)
+                return NotFound(new { Message = "Event not found" });
+
+            existing.Title = evnt.Title;
+            existing.Description = evnt.Description;
+            existing.PosterUrl = evnt.PosterUrl;
+            existing.EventDate = evnt.EventDate;
 
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(existing);
         }
 
-        /// <summary>
-        /// Delete an event by ID (Admin only).
-        /// </summary>
+        // 🔐 DELETE: api/event/5 (Only admin/faculty)
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin,faculty")]
         public async Task<IActionResult> DeleteEvent(int id)
         {
-            var ev = await _context.Events.FindAsync(id);
-            if (ev == null)
-                return NotFound($"Event with ID {id} not found.");
+            var evnt = await _context.Events.FindAsync(id);
+            if (evnt == null)
+                return NotFound(new { Message = "Event not found" });
 
-            _context.Events.Remove(ev);
+            _context.Events.Remove(evnt);
             await _context.SaveChangesAsync();
 
             return NoContent();

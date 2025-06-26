@@ -22,7 +22,7 @@ namespace CampusConnectAPI.Controllers
             _jwt = jwt;
         }
 
-        // 1️⃣ Anyone can register as a student (pending approval)
+        // 1️⃣ Register Student (Public)
         [HttpPost("register-student-public")]
         [AllowAnonymous]
         public async Task<IActionResult> RegisterStudentPublic([FromBody] RegisterStudentDto dto)
@@ -30,19 +30,22 @@ namespace CampusConnectAPI.Controllers
             if (string.IsNullOrWhiteSpace(dto.CollegeId) || string.IsNullOrWhiteSpace(dto.Email))
                 return BadRequest("College ID and Email are required");
 
-            if (await _context.Students.AnyAsync(s => s.Email == dto.Email || s.CollegeId == dto.CollegeId))
+            bool exists = await _context.Students
+                .AnyAsync(s => s.Email == dto.Email || s.CollegeId == dto.CollegeId);
+
+            if (exists)
                 return BadRequest("Student already exists");
 
             var student = new Student
             {
-                CollegeId = dto.CollegeId,
-                Email = dto.Email,
+                CollegeId = dto.CollegeId.Trim(),
+                Email = dto.Email.Trim(),
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FullName = dto.FullName,
                 Department = dto.Department,
                 Batch = dto.Batch,
                 Role = "student",
-                IsApproved = false, // pending
+                IsApproved = false,
                 CreatedBy = "Self"
             };
 
@@ -52,7 +55,7 @@ namespace CampusConnectAPI.Controllers
             return Ok("Student registered successfully and pending approval.");
         }
 
-        // 2️⃣ View unapproved students (faculty or admin)
+        // 2️⃣ Get All Unapproved Students (faculty, admin)
         [HttpGet("unapproved-students")]
         [Authorize(Roles = "faculty,admin")]
         public async Task<IActionResult> GetUnapprovedStudents()
@@ -64,12 +67,14 @@ namespace CampusConnectAPI.Controllers
             return Ok(unapproved);
         }
 
-        // 3️⃣ Approve student (faculty or admin)
+        // 3️⃣ Approve Student
         [HttpPost("approve-student/{collegeId}")]
         [Authorize(Roles = "faculty,admin")]
         public async Task<IActionResult> ApproveStudent(string collegeId)
         {
-            var student = await _context.Students.FirstOrDefaultAsync(s => s.CollegeId == collegeId && !s.IsDeleted);
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.CollegeId == collegeId && !s.IsDeleted);
+
             if (student == null)
                 return NotFound("Student not found");
 
@@ -86,8 +91,9 @@ namespace CampusConnectAPI.Controllers
             return Ok("Student approved successfully");
         }
 
-        // 🔐 Login (already exists)
+        // 🔐 4️⃣ Login
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.CollegeId) || string.IsNullOrWhiteSpace(dto.Password))
@@ -98,52 +104,68 @@ namespace CampusConnectAPI.Controllers
             string storedHash = "";
             string email = "";
             string userId = "";
+            string department = "";
 
-            var collegeId = dto.CollegeId.Trim();
+            string collegeId = dto.CollegeId.Trim();
 
-            var student = await _context.Students.FirstOrDefaultAsync(s => s.CollegeId == collegeId && !s.IsDeleted);
-            if (student != null)
+            try
             {
-                if (!student.IsApproved)
-                    return Unauthorized("Student registration not approved yet.");
+                // 👩‍🎓 Try student
+                var student = await _context.Students
+                    .FirstOrDefaultAsync(s => s.CollegeId == collegeId && !s.IsDeleted);
 
-                user = student;
-                storedHash = student.PasswordHash;
-                role = student.Role;
-                email = student.Email;
-                userId = student.CollegeId;
-            }
-
-            if (user == null)
-            {
-                var faculty = await _context.Faculties.FirstOrDefaultAsync(f => f.CollegeId == collegeId && !f.IsDeleted);
-                if (faculty != null)
+                if (student != null)
                 {
-                    user = faculty;
-                    storedHash = faculty.PasswordHash;
-                    role = faculty.Role;
-                    email = faculty.Email;
-                    userId = faculty.CollegeId;
+                    if (!student.IsApproved)
+                        return Unauthorized("Student registration not approved yet.");
+
+                    user = student;
+                    storedHash = student.PasswordHash;
+                    role = student.Role;
+                    email = student.Email;
+                    userId = student.CollegeId;
+                }
+                else
+                {
+                    // 👨‍🏫 Try faculty
+                    var faculty = await _context.Faculties
+                        .FirstOrDefaultAsync(f => f.CollegeId == collegeId && !f.IsDeleted);
+
+                    if (faculty != null)
+                    {
+                        user = faculty;
+                        storedHash = faculty.PasswordHash;
+                        role = faculty.Role;
+                        email = faculty.Email;
+                        userId = faculty.CollegeId;
+                    }
+                    else
+                    {
+                        // 👨‍💼 Try admin
+                        var admin = await _context.Admins
+                            .FirstOrDefaultAsync(a => a.CollegeId == collegeId && !a.IsDeleted);
+
+                        if (admin != null)
+                        {
+                            user = admin;
+                            storedHash = admin.PasswordHash;
+                            role = admin.Role;
+                            email = admin.Email;
+                            userId = admin.CollegeId;
+                        }
+                    }
                 }
             }
-
-            if (user == null)
+            catch (Exception ex)
             {
-                var admin = await _context.Admins.FirstOrDefaultAsync(a => a.CollegeId == collegeId && !a.IsDeleted);
-                if (admin != null)
-                {
-                    user = admin;
-                    storedHash = admin.PasswordHash;
-                    role = admin.Role;
-                    email = admin.Email;
-                    userId = admin.CollegeId;
-                }
+                return StatusCode(500, $"Login error: {ex.Message}");
             }
 
+            // 🔐 Final credential check
             if (user == null || string.IsNullOrEmpty(storedHash) || !BCrypt.Net.BCrypt.Verify(dto.Password, storedHash))
                 return Unauthorized("Invalid credentials");
 
-            var token = _jwt.GenerateToken(userId, email, role);
+            var token = _jwt.GenerateToken(userId, email, role, department);
 
             return Ok(new LoginResponseDto
             {

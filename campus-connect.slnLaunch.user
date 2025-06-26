@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "campus-connect.client\\campus-connect.client.esproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "campus-connect.Server\\campus-connect.Server.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      }
+    ]
+  }
+]

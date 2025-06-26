@@ -170,3 +170,8 @@ C:\Users\ADMIN\source\repos\campus-connect\campus-connect\campus-connect.Server\
 C:\Users\ADMIN\source\repos\campus-connect\campus-connect\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.genruntimeconfig.cache
 C:\Users\ADMIN\source\repos\campus-connect\campus-connect\campus-connect.Server\obj\Debug\net8.0\ref\campus-connect.Server.dll
 C:\Users\ADMIN\source\repos\campus-connect\campus-connect\campus-connect.Server\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\ASUS\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.csproj.AssemblyReference.cache
+C:\Users\ASUS\source\New folder\campus-connect.Server\obj\Debug\net8.0\spa.proxy.json
+C:\Users\ASUS\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.dll
+C:\Users\ASUS\source\New folder\campus-connect.Server\obj\Debug\net8.0\refint\campus-connect.Server.dll
+C:\Users\ASUS\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.pdb

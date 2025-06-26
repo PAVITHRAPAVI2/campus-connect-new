@@ -7,6 +7,7 @@ import ManageFaculty from './Pages/Admin/managefaculty.jsx';
 import NoticeBoard from './Pages/Admin/noticeboard.jsx';
 import Dashboard from './Pages/Admin/dashboard.jsx';
 import CommonGroupChatContent from './Pages/Admin/groupchat.jsx';
+import ForgotPassword from './Pages/Admin/forget.jsx';
 
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/notices" element={<NoticeBoard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/groupchat" element={<CommonGroupChatContent />} />
+            <Route path="/forget" element={< ForgotPassword />} />
         </Routes>
     );
 };

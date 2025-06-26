@@ -10,76 +10,69 @@ const DashboardLayout = ({ children }) => {
         setShowGroupChatMenu(!showGroupChatMenu);
     };
 
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/login');
+    };
+
+    const userName = localStorage.getItem('userName') || 'User';
+    const userRole = localStorage.getItem('userRole') || 'Role';
+
     return (
         <div className="dashboard-container">
+            {/* Top Navbar */}
             <header className="navbar">
                 <div className="navbar-left">Campus Connect</div>
                 <div className="navbar-right">
                     <span className="icon">🔔</span>
                     <span className="icon">💬</span>
                     <span className="user-info">
-                        Dr. Sarah Johnson
-                        <span className="badge">Faculty</span>
+                        {userName}
+                        <span className="badge">{userRole}</span>
                     </span>
                 </div>
             </header>
 
+            {/* Main Body */}
             <div className="dashboard-body">
-                <main className="main-content">{children}</main>
-
+                {/* Sidebar on the left */}
                 <aside className="sidebar">
-                    <nav>
+                    <nav className="sidebar-nav">
                         <ul>
-                            <li onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
-                                Dashboard
-                            </li>
+                            <li onClick={() => navigate('/dashboard')}>Dashboard</li>
+                            <li onClick={() => navigate('/notices')}>Notice Board</li>
 
-                            {/* Group Chat Dropdown */}
-                            <li style={{ cursor: 'pointer' }}>
-                                <div
-                                    onClick={toggleGroupChat}
-                                    style={{
-                                        background: '#e6f4ff',
-                                        border: '1px solid #007bff',
-                                        padding: '10px',
-                                        borderRadius: '10px',
-                                        textAlign: 'center'
-                                    }}
-                                >
+                            <li>
+                                <div onClick={toggleGroupChat} className="group-chat-toggle">
                                     <strong>Group Chat</strong> {showGroupChatMenu ? '▲' : '▼'}
                                 </div>
                                 {showGroupChatMenu && (
-                                    <div style={{ background: '#e6f4ff', padding: '10px' }}>
-                                        <div
-                                            style={{ cursor: 'pointer', textDecoration: 'underline', marginBottom: '5px' }}
-                                            onClick={() => navigate('/groupchat')}
-                                        >
-                                            Common Chat
-                                        </div>
-                                        <div
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={() => navigate('/cschat')}
-                                        >
-                                            CS Department Chat
-                                        </div>
+                                    <div className="group-chat-options">
+                                        <div onClick={() => navigate('/groupchat')}>Common Chat</div>
+                                        <div onClick={() => navigate('/cschat')}>Department Chat</div>
                                     </div>
                                 )}
                             </li>
 
-                            <li onClick={() => navigate('/managefaculty')} style={{ cursor: 'pointer' }}>
-                                Manage Faculty
-                            </li>
-                            <li onClick={() => navigate('/usermanagement')} style={{ cursor: 'pointer' }}>
-                                Manage Students
-                            </li>
-                            <li onClick={() => navigate('/notices')} style={{ cursor: 'pointer' }}>
-                                Notice Board
+                            <li onClick={() => navigate('/managefaculty')}>Manage Faculty</li>
+                            {/*<li onClick={() => navigate('/studentapproval')}>Student Approval</li>*/}
+                            <li onClick={() => navigate('/usermanagement')}>Manage Students</li>
+
+                            {/* Logout Button right below "Manage Students" */}
+                            <li>
+                                <button className="logout-btn-sidebar" onClick={handleLogout}>
+                                    Logout
+                                </button>
                             </li>
                         </ul>
                     </nav>
                 </aside>
+
+                {/* Main Content */}
+                <main className="main-content">{children}</main>
             </div>
 
+            {/* Footer */}
             <footer className="footer">© 2024 Campus Connect. All rights reserved.</footer>
         </div>
     );

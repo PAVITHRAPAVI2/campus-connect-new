@@ -4,12 +4,13 @@ import axios from 'axios';
 import './login.css';
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import BASE_URL from '../../config.js'; // Ensure this uses HTTPS
+import BASE_URL from '../../config.js';
 
 const LoginPage = () => {
     const [collegeId, setCollegeId] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -28,34 +29,32 @@ const LoginPage = () => {
 
             if (response.data && response.data.token) {
                 localStorage.setItem('token', response.data.token);
-                localStorage.setItem('userId', response.data.userId); // optional
-                navigate('/dashboard');
+                localStorage.setItem('userId', response.data.userId);
+                localStorage.setItem('userName', response.data.name);
+                localStorage.setItem('userRole', response.data.role);
+
+
+                // ✅ Show success message inside form
+                setSuccessMessage('Login successful! Redirecting...');
+                setError('');
+
+                // Delay navigation
+                setTimeout(() => {
+                    navigate('/dashboard');
+                }, 1500);
             } else {
                 setError('Invalid login credentials');
+                setSuccessMessage('');
             }
         } catch (err) {
-            if (axios.isAxiosError(err)) {
-                const errMsg =
-                    err.response?.data?.message ||
-                    (err.code === 'ERR_NETWORK'
-                        ? 'Network error: Cannot connect to the server.'
-                        : 'Login failed. Please try again.');
+            const errMsg =
+                err.response?.data?.message ||
+                (err.code === 'ERR_NETWORK'
+                    ? 'Network error: Cannot connect to the server.'
+                    : 'Login failed. Please try again.');
 
-                setError(errMsg);
-
-                // Detailed debug info
-                console.error('Axios error:', {
-                    message: err.message,
-                    code: err.code,
-                    method: err.config?.method,
-                    url: err.config?.url,
-                    status: err.response?.status,
-                    data: err.response?.data,
-                });
-            } else {
-                setError('Unexpected error occurred.');
-                console.error('Unexpected error:', err);
-            }
+            setError(errMsg);
+            setSuccessMessage('');
         }
     };
 
@@ -82,18 +81,20 @@ const LoginPage = () => {
                     />
 
                     <div className="forgot-password">
-                        <a href="#">Forgot Password?</a>
+                        <Link to="/forget">Forgot Password?</Link>
                     </div>
 
                     <button type="submit">Login</button>
 
+                    {/* ✅ Show messages inside the form */}
                     {error && <p className="error-msg">{error}</p>}
+                    {successMessage && <p className="success-msg">{successMessage}</p>}
 
-                    <div className="register-link">
-                        <p>
-                            Don't have an account? <Link to="/register">Register here</Link>
-                        </p>
-                    </div>
+                    {/*<div className="register-link">*/}
+                    {/*    <p>*/}
+                    {/*        Don't have an account? <Link to="/register">Register here</Link>*/}
+                    {/*    </p>*/}
+                    {/*</div>*/}
                 </form>
             </div>
 

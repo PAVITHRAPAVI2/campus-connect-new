@@ -1,19 +1,27 @@
 ﻿import React, { useState, useEffect } from 'react';
-import './usermanage.css'; // Rename the CSS file too
+import './usermanage.css';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import axios from 'axios';
 import DashboardLayout from '../../components/dashboardlayout';
 
 const ManageStudents = () => {
     const [search, setSearch] = useState('');
+    const [selectedDept, setSelectedDept] = useState('All Departments');
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('https://localhost:7144/api/User')
+        axios.get('https://campusconnect.tryasp.net/api/Students/students/approved')
             .then((res) => {
-                const studentUsers = res.data.filter(user => user.role === 'Student');
-                setStudents(studentUsers);
+                if (Array.isArray(res.data)) {
+                    const studentUsers = res.data.filter(user =>
+                        user.role?.toLowerCase().trim() === 'student'
+                    );
+                    setStudents(studentUsers);
+                } else {
+                    console.warn('Unexpected response format:', res.data);
+                    setStudents([]);
+                }
                 setLoading(false);
             })
             .catch((err) => {
@@ -22,11 +30,17 @@ const ManageStudents = () => {
             });
     }, []);
 
-    const filteredStudents = students.filter(
-        (student) =>
-            student.name.toLowerCase().includes(search.toLowerCase()) ||
-            student.email.toLowerCase().includes(search.toLowerCase())
-    );
+    // 🧠 Combined filter: search + department
+    const filteredStudents = students.filter((student) => {
+        const matchesSearch =
+            student.name?.toLowerCase().includes(search.toLowerCase()) ||
+            student.email?.toLowerCase().includes(search.toLowerCase());
+
+        const matchesDepartment =
+            selectedDept === 'All Departments' || student.department === selectedDept;
+
+        return matchesSearch && matchesDepartment;
+    });
 
     return (
         <DashboardLayout>
@@ -37,21 +51,19 @@ const ManageStudents = () => {
                 <div className="filters">
                     <input
                         type="text"
-                        placeholder="🔍 Search by name or email"
+                        placeholder="🔍 Search by name or ID"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    <select>
+                    <select
+                        value={selectedDept}
+                        onChange={(e) => setSelectedDept(e.target.value)}
+                    >
                         <option>All Departments</option>
-                        <option>CSE</option>
-                        <option>ECE</option>
-                        <option>IT</option>
-                        <option>EEE</option>
-                    </select>
-                    <select>
-                        <option>All Status</option>
-                        <option>Approved</option>
-                        <option>Pending</option>
+                        <option>Computer Science</option>
+                        <option>Chemistry</option>
+                        <option>Maths</option>
+                        <option>Physics</option>
                     </select>
                 </div>
 
@@ -71,16 +83,16 @@ const ManageStudents = () => {
                             <div className="table-row" key={idx}>
                                 <div className="user-cell">
                                     <div className="avatar">
-                                        {student.initials || student.name.slice(0, 2).toUpperCase()}
+                                        {student.initials || student.name?.slice(0, 2).toUpperCase()}
                                     </div>
                                     <div>
                                         <strong>{student.name}</strong>
                                         <div className="email">{student.email}</div>
                                     </div>
                                 </div>
-                                <span>{student.department}</span>
-                                <span className={`badge ${student.status?.toLowerCase()}`}>{student.status}</span>
-                                <span>{student.joinDate}</span>
+                                <span>{student.department || 'N/A'}</span>
+                                <span className={`badge ${student.status?.toLowerCase()}`}>{student.status || 'N/A'}</span>
+                                <span>{student.joinDate || 'N/A'}</span>
                                 <span className="actions">
                                     <FaCheckCircle className="approve-icon" />
                                     <FaTimesCircle className="reject-icon" />

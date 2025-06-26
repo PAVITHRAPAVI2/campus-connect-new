@@ -35,7 +35,7 @@ const DashboardLayout = ({ children }) => {
                     <nav>
                         <ul>
                             <li><Link to="/faculty">Dashboard</Link></li>
-                            <li><Link to="/faculty/notice-board">Notice Board</Link></li>
+                            <li><Link to="/faculty/Notice">Notice Board</Link></li>
                             <li>
                                 <button
                                     className="dropdown-btn"
@@ -43,10 +43,10 @@ const DashboardLayout = ({ children }) => {
                                 >
                                     Group Chat {openChatDropdown ? '▲' : '▼'}
                                 </button>
-                                {openChatDropdown && (
+                                {openChatDropdown && (      
                                     <ul className="dropdown-list">
                                         <li>
-                                            <Link to="/groupchat">Common Chat</Link>
+                                            <Link to="/faculty/Groupchat">Common Chat</Link>
                                         </li>
                                         <li>
                                             <Link to={`/chat/department/${user.department.toLowerCase()}`}>
@@ -56,7 +56,7 @@ const DashboardLayout = ({ children }) => {
                                     </ul>
                                 )}
                             </li>
-                            <li><Link to="/faculty/student-approvals">Student Approvals</Link></li>
+                            <li><Link to="/faculty/Approval">Student Approvals</Link></li>
                         </ul>
 
                     </nav>

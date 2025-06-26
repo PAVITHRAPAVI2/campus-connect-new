@@ -1,9 +1,8 @@
-/* Navbar styles */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #084c4c; /* your primary teal */
+    background-color: #8b5cf6;
     padding: 1rem 2rem;
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -34,7 +33,7 @@
 /* Login button style */
 .login-btn {
     background-color: white;
-    color: #084c4c;
+    color: #8b5cf6;
 }
 
     .login-btn:hover {
@@ -43,8 +42,8 @@
 
 /* Sign up button style */
 .signup-btn {
-    background-color: #10b981; /* mint green */
-    color: white;
+    background-color: white; /* mint green */
+    color: #8b5cf6;
 }
 
     .signup-btn:hover {

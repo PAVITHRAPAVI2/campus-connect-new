@@ -1,16 +1,28 @@
-﻿import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+﻿import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './DashboardLayout.css';
 
 const DashboardLayout = ({ children }) => {
     const [openChatDropdown, setOpenChatDropdown] = useState(false);
+    const navigate = useNavigate();
 
-    // In a real app, pull this from auth/context
-    
+    // Check if token exists
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login', { replace: true });
+        }
+    }, [navigate]);
+
     const user = {
-        name: 'Dr. Sarah Johnson',
-        role: 'Student',
-        department: 'CS',
+        name: localStorage.getItem('fullName') || 'User',
+        role: localStorage.getItem('role') || 'Unknown',
+        department: localStorage.getItem('userDepartment') || 'CSE',
+    };
+
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/login', { replace: true });
     };
 
     return (
@@ -28,38 +40,32 @@ const DashboardLayout = ({ children }) => {
                 </div>
             </header>
 
-            {/* Main content + Right Sidebar */}
+            {/* Main Layout */}
             <div className="dashboard-body">
                 <main className="main-content">{children}</main>
 
+                {/* Sidebar */}
                 <aside className="sidebar">
                     <nav>
                         <ul>
-                            <li>
-                                <Link to="/student">Dashboard</Link>
-                            </li>
-                            <li>
-                                <Link to="/student/notice-board">Notice Board</Link>
-                            </li>
+                            <li><Link to="/student">Dashboard</Link></li>
+                            <li><Link to="/profile">Profile</Link></li>
+                            <li><Link to="/notices">Notice Board</Link></li>
 
                             {/* Group Chat Dropdown */}
-                            <li>
+                            <li className={`dropdown ${openChatDropdown ? 'open' : ''}`}>
                                 <button
                                     className="dropdown-btn"
                                     onClick={() => setOpenChatDropdown(!openChatDropdown)}
                                 >
-                                    Group Chat {openChatDropdown ? '▲' : '▼'}
+                                    Group Chat <span className="caret">{openChatDropdown ? '▲' : '▼'}</span>
                                 </button>
 
                                 {openChatDropdown && (
                                     <ul className="dropdown-list">
+                                        <li><Link to="/chat/common">Common Chat</Link></li>
                                         <li>
-                                            <Link to="/chat/common">Common Chat</Link>
-                                        </li>
-                                        <li>
-                                            <Link
-                                                to={`/chat/department/${user.department.toLowerCase()}`}
-                                            >
+                                            <Link to={`/chat/department/${user.department.toLowerCase()}`}>
                                                 {user.department} Department Chat
                                             </Link>
                                         </li>
@@ -67,8 +73,11 @@ const DashboardLayout = ({ children }) => {
                                 )}
                             </li>
 
+
                             <li>
-                                <Link to="/student/events">View Events</Link>
+                                <button className="logout-link" onClick={handleLogout}>
+                                    Logout
+                                </button>
                             </li>
                         </ul>
                     </nav>

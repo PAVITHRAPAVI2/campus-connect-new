@@ -1,7 +1,6 @@
 // src/config.js
 
-const config = {
-    apiBaseUrl: 'https://campusconnect.runasp.net/api/'
-};
+const BASE_URL = 'https://campusconnect.tryasp.net/api';
+export default BASE_URL;
 
-export default config;
+

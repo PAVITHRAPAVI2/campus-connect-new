@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "tNMTdvWHHJc=",
   "success": true,
   "projectFilePath": "C:\\Users\\key 3\\source\\New folder\\campus-connect.Server\\campus-connect.Server.csproj",
+=======
+  "dgSpecHash": "GHZ+F3KFZ9M=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ASUS\\source\\New folder\\campus-connect.Server\\campus-connect.Server.csproj",
+>>>>>>> 292e95124114fd6de31c616030227a10284b8cea
   "expectedPackageFiles": [
     "C:\\Users\\key 3\\.nuget\\packages\\microsoft.aspnetcore.spaproxy\\8.0.17\\microsoft.aspnetcore.spaproxy.8.0.17.nupkg.sha512",
     "C:\\Users\\key 3\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",

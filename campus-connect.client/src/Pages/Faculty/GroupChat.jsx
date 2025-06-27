@@ -1,20 +1,45 @@
 ﻿import React, { useState, useEffect } from 'react';
 import '../../Pages/styles/GroupChat.css';
 import DashboardLayout from '../../components/DashboardLayout';
+import BASE_URL from '../../config';
 
 const CommonGroupChatContent = () => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
-    const user = JSON.parse(localStorage.getItem('user')) || { name: 'You' };
+    const [groupId, setGroupId] = useState(null);
+    const user = JSON.parse(localStorage.getItem('user')) || { name: 'You', collegeId: '' };
 
-    // Load messages when component mounts
+    // Load common group and its messages
     useEffect(() => {
-        fetchMessages();
+        fetchCommonGroup();
     }, []);
 
-    const fetchMessages = async () => {
+    const fetchCommonGroup = async () => {
         try {
-            const res = await fetch('/api/chat/common');
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${BASE_URL}/api/Message/groups`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const groups = await res.json();
+            const commonGroup = groups.find((g) => g.isCommon);
+            if (commonGroup) {
+                setGroupId(commonGroup.id);
+                fetchMessages(commonGroup.id);
+            } else {
+                console.error('No common group found.');
+            }
+        } catch (err) {
+            console.error('Failed to load groups:', err);
+        }
+    };
+
+    const fetchMessages = async (groupId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${BASE_URL}/api/Message/groups/${groupId}/messages`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
             const data = await res.json();
             setMessages(data);
         } catch (err) {
@@ -23,48 +48,48 @@ const CommonGroupChatContent = () => {
     };
 
     const handleSend = async () => {
-        if (input.trim() === '') return;
+        if (input.trim() === '' || !groupId) return;
 
         const newMessage = {
-            sender: user.name,
-            text: input,
-            timestamp: new Date().toISOString()
+            content: input,
+            groupId: groupId,
         };
 
         try {
-            const res = await fetch('/api/chat/common', {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${BASE_URL}/api/Message/send`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(newMessage),
             });
 
             if (res.ok) {
-                const saved = await res.json();
-                setMessages([...messages, saved]);
                 setInput('');
+                fetchMessages(groupId); // Refresh messages after sending
+            } else {
+                console.error('Failed to send message');
             }
         } catch (err) {
-            console.error('Failed to send message:', err);
+            console.error('Error while sending message:', err);
         }
     };
 
     return (
         <div className="chat-container">
             <div className="chat-header">💬 Common Group Chat</div>
-
             <div className="chat-box">
-                {messages.map((msg, index) => (
+                {messages.map((msg) => (
                     <div
-                        key={index}
-                        className={`chat-message ${msg.sender === user.name ? 'sent' : 'received'}`}
+                        key={msg.id}
+                        className={`chat-message ${msg.senderCollegeId === user.collegeId ? 'sent' : 'received'}`}
                     >
-                        <span className="sender">{msg.sender}:</span> {msg.text}
+                        <span className="sender">{msg.senderCollegeId} ({msg.senderRole}):</span> {msg.content}
                     </div>
                 ))}
             </div>
-
             <div className="chat-input">
                 <input
                     type="text"

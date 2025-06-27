@@ -11,12 +11,12 @@ import DepartmentGroupChat from './Pages/Faculty/DepartmentChat';
 import Register from './Pages/Register';
 import ManageStudents from './Pages/Faculty/ManageStudent';
 import ManageFaculty from './Pages/Admin/managefaculty';
+import StudentDashboard from './Pages/Student/StudentDashboard';
 
 
 const App= () =>{
     return (
         <Router>
-       
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/faculty" element={< FacultyDashboard />} />
@@ -29,6 +29,7 @@ const App= () =>{
                 <Route path="/Signup" element={< Register />} />
                 <Route path="/Faculty/ManageStudent" element={< ManageStudents />} />
                 <Route path="/admin/ManageStudent" element={<ManageFaculty />} />
+                <Route path="/student" element={<StudentDashboard/>} />
 
 
             </Routes>

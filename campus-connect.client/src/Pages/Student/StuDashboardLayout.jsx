@@ -1,45 +1,38 @@
-﻿// src/components/DashboardLayout.jsx
-import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import './Styless/DashboardLayout.css';
+﻿import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './studentstyle/StuDashboardLayout.css';
 
-const DashboardLayout = () => {
+const DashboardLayout = ({ children }) => {
     const [openChatDropdown, setOpenChatDropdown] = useState(false);
     const navigate = useNavigate();
 
-    const [user, setUser] = useState({
-        name: '',
-        role: '',
-        department: ''
-    });
-
+    // Check if token exists
     useEffect(() => {
         const token = localStorage.getItem('token');
-        const userData = JSON.parse(localStorage.getItem('user'));
-
-        if (!token || !userData || userData.role.toLowerCase() !== 'faculty') {
-            navigate('/login');
-        } else {
-            setUser({
-                name: userData.name,
-                role: userData.role,
-                department: userData.department
-            });
+        if (!token) {
+            navigate('/login', { replace: true });
         }
     }, [navigate]);
 
+    const user = {
+        name: localStorage.getItem('fullName') || 'User',
+        role: localStorage.getItem('role') || 'Unknown',
+        department: localStorage.getItem('userDepartment') || 'CSE',
+    };
+
     const handleLogout = () => {
         localStorage.clear();
-        navigate('/login');
+        navigate('/login', { replace: true });
     };
 
     return (
         <div className="dashboard-container">
+            {/* Top Navbar */}
             <header className="navbar">
-                <div className="logo-navbar">
-                <img src="/src/assets/logo.png" alt="Campus Connect Logo" className="logo" onClick={() => navigate('/')} />
-                    <div className="navbar-left">Campus Connect</div></div>
+                <div className="navbar-left">Campus Connect</div>
                 <div className="navbar-right">
+                    <span className="icon">🔔</span>
+                    <span className="icon">💬</span>
                     <span className="user-info">
                         {user.name}
                         <span className="badge">{user.role}</span>
@@ -47,46 +40,52 @@ const DashboardLayout = () => {
                 </div>
             </header>
 
+            {/* Main Layout */}
             <div className="dashboard-body">
+                <main className="main-content">{children}</main>
+
+                {/* Sidebar */}
                 <aside className="sidebar">
                     <nav>
                         <ul>
-                            <li><Link to="/faculty">Dashboard</Link></li>
-                            <li><Link to="/faculty/Notice">Notice Board</Link></li>
-                            <li>
+                            <li><Link to="/student">Dashboard</Link></li>
+                            <li><Link to="/profile">Profile</Link></li>
+                            <li><Link to="/notices">Notice Board</Link></li>
+
+                            {/* Group Chat Dropdown */}
+                            <li className={`dropdown ${openChatDropdown ? 'open' : ''}`}>
                                 <button
                                     className="dropdown-btn"
                                     onClick={() => setOpenChatDropdown(!openChatDropdown)}
                                 >
-                                    Group Chat {openChatDropdown ? '▲' : '▼'}
+                                    Group Chat <span className="caret">{openChatDropdown ? '▲' : '▼'}</span>
                                 </button>
+
                                 {openChatDropdown && (
                                     <ul className="dropdown-list">
-                                        <li><Link to="/faculty/Groupchat">Common Chat</Link></li>
+                                        <li><Link to="/commonchat">Common Chat</Link></li>
                                         <li>
-                                            <Link to={`/chat/department/${user.department.toLowerCase()}`}>
+                                            <Link to="/depchat">
                                                 {user.department} Department Chat
                                             </Link>
+
                                         </li>
                                     </ul>
                                 )}
                             </li>
-                            <li><Link to="/faculty/Approval">Student Approvals</Link></li>
-                            <li><Link to="/Faculty/ManageStudent">Manage Students</Link></li>
+
+
                             <li>
-                                <button className="logout-btn" onClick={handleLogout}>
+                                <button className="logout-link" onClick={handleLogout}>
                                     Logout
                                 </button>
                             </li>
                         </ul>
                     </nav>
                 </aside>
-
-                <main className="main-content">
-                    <Outlet />
-                </main>
             </div>
 
+            {/* Footer */}
             <footer className="footer">
                 © 2024 Campus Connect. All rights reserved.
             </footer>

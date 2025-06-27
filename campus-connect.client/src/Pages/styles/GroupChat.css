@@ -9,7 +9,7 @@
 }
 
 .chat-header {
-    background-color: #084c4c;
+    background: linear-gradient(to right, #cb80dc, #b984e2, #b19dec, #a88ce8, #a188e8);
     color: white;
     padding: 1rem;
     font-weight: bold;

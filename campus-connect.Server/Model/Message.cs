@@ -20,5 +20,8 @@ namespace campus_connect.Server.Model
         public Guid GroupId { get; set; }
 
         public MessageGroup Group { get; set; } = null!;
+
+        
+
     }
 }

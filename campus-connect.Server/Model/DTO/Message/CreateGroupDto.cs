@@ -4,6 +4,6 @@
     {
         public string Name { get; set; } = string.Empty;
         public bool IsCommon { get; set; }
-        public string? Department { get; set; } // Only for department-specific groups
+        public string? Department { get; set; } 
     }
 }

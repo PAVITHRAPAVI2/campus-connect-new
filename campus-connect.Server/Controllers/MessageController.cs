@@ -100,5 +100,52 @@ namespace campus_connect.Server.Controllers
 
             return Ok("Message sent");
         }
+
+        // ✅ Update a message (only sender can update)
+        [HttpPut("messages/{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateMessage(Guid id, [FromBody] UpdateMessageDto dto)
+        {
+            var message = await _context.Messages.FindAsync(id);
+            if (message == null)
+                return NotFound("Message not found");
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (message.SenderCollegeId != userId)
+                return Forbid("You can only edit your own messages");
+
+            message.Content = dto.Content;
+            message.UpdatedAt = DateTime.UtcNow;
+            message.UpdatedBy = userId;
+
+            await _context.SaveChangesAsync();
+            return Ok("Message updated successfully.");
+        }
+
+        // ✅ Soft delete a message (only sender can delete)
+        [HttpDelete("messages/{id}")]
+        [Authorize]
+        public async Task<IActionResult> SoftDeleteMessage(Guid id)
+        {
+            var message = await _context.Messages.FindAsync(id);
+            if (message == null)
+                return NotFound("Message not found");
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (message.SenderCollegeId != userId)
+                return Forbid("You can only delete your own messages");
+
+            message.IsDeleted = true;
+            message.UpdatedAt = DateTime.UtcNow;
+            message.UpdatedBy = userId;
+
+            await _context.SaveChangesAsync();
+            return Ok("Message deleted successfully.");
+        }
+
+
+
     }
 }

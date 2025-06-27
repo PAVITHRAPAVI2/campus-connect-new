@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./noticeboard.css";
 import {
     FiCalendar,
@@ -6,7 +7,7 @@ import {
     FiMessageSquare,
     FiPlus
 } from "react-icons/fi";
-import DashboardLayout from '../../components/dashboardlayout';
+import DashboardLayout from "../../components/dashboardlayout";
 
 const NoticeBoard = () => {
     const [search, setSearch] = useState("");
@@ -21,44 +22,29 @@ const NoticeBoard = () => {
     const [content, setContent] = useState("");
 
     const [userRole, setUserRole] = useState("student");
+    const [notices, setNotices] = useState([]);
+
+    const API_BASE = "https://campusconnect.tryasp.net/api/Notices";
 
     useEffect(() => {
         const role = localStorage.getItem("role") || "admin";
         setUserRole(role);
+        fetchNotices();
     }, []);
+
+    const fetchNotices = async () => {
+        try {
+            const res = await axios.get(API_BASE);
+            setNotices(res.data);
+        } catch (err) {
+            console.error("Error fetching notices:", err);
+        }
+    };
 
     const showToast = (message) => {
         setToast(message);
         setTimeout(() => setToast(""), 3000);
     };
-
-    const [notices, setNotices] = useState([
-        {
-            id: 1,
-            title: "Mid-Term Examination Schedule",
-            priority: "High",
-            category: "Academic",
-            author: "Dr. Sarah Johnson",
-            date: "Mar 1, 2024, 03:30 PM",
-            department: "Computer Science",
-            content: "Mid-term exams begin March 15th. Check your department board.",
-            views: 156,
-            comments: 0,
-            pin: true
-        },
-        {
-            id: 2,
-            title: "Annual Tech Fest - InnovateTech 2024",
-            priority: "Medium",
-            category: "Event",
-            author: "System Administrator",
-            date: "Feb 28, 2024, 08:00 PM",
-            department: "IT Administration",
-            content: "Join our tech festival! Registration opens March 10th.",
-            views: 120,
-            comments: 2
-        }
-    ]);
 
     const handleEdit = (notice) => {
         setTitle(notice.title);
@@ -70,38 +56,64 @@ const NoticeBoard = () => {
         setShowModal(true);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this notice?")) {
-            setNotices(notices.filter((notice) => notice.id !== id));
-            showToast("Notice deleted successfully!");
+            try {
+                await axios.delete(`${API_BASE}/${id}`);
+                setNotices(notices.filter((n) => n.id !== id));
+                showToast("Notice deleted successfully!");
+            } catch (err) {
+                console.error("Delete error:", err);
+                showToast("Failed to delete notice");
+            }
         }
     };
 
-    const handleSubmit = () => {
-        if (editingNoticeId) {
-            setNotices(notices.map((n) =>
-                n.id === editingNoticeId
-                    ? { ...n, title, category, priority, department, content }
-                    : n
-            ));
-            showToast("Notice updated successfully!");
-        } else {
-            const newNotice = {
-                id: Date.now(),
-                title,
-                category,
-                priority,
-                department,
-                content,
-                date: new Date().toLocaleString(),
-                author: "You",
-                views: 0,
-                comments: 0
-            };
-            setNotices([...notices, newNotice]);
-            showToast("Notice posted successfully!");
+    const handleSubmit = async () => {
+        const noticeData = {
+            title: title.trim(),
+            category: category.trim(),
+            priority: priority.trim(),
+            department: department.trim(),
+            content: content.trim(),
+            author: "System",
+            date: new Date().toISOString(),
+            views: 0,
+            comments: 0,
+            pin: false
+        };
+
+        // validation
+        for (let key in noticeData) {
+            if (noticeData[key] === "") {
+                showToast(`Field "${key}" is required`);
+                return;
+            }
         }
 
+        try {
+            if (editingNoticeId) {
+                // PUT
+                await axios.put(`${API_BASE}/${editingNoticeId}`, {
+                    ...noticeData,
+                    id: editingNoticeId
+                });
+                showToast("Notice updated successfully!");
+            } else {
+                // POST
+                await axios.post(API_BASE, noticeData);
+                showToast("Notice posted successfully!");
+            }
+
+            clearForm();
+            fetchNotices();
+        } catch (error) {
+            console.error("Failed to save notice", error);
+            showToast("Failed to save notice");
+        }
+    };
+
+    const clearForm = () => {
         setTitle("");
         setCategory("");
         setPriority("");
@@ -130,16 +142,6 @@ const NoticeBoard = () => {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    <select>
-                        <option>All Categories</option>
-                        <option>Academic</option>
-                        <option>Event</option>
-                    </select>
-                    <select>
-                        <option>All Departments</option>
-                        <option>Computer Science</option>
-                        <option>IT Administration</option>
-                    </select>
                 </div>
 
                 <div className="notices-list">
@@ -155,13 +157,11 @@ const NoticeBoard = () => {
                                         {notice.priority} Priority
                                     </span>
                                     <span className="tag category">{notice.category}</span>
-                                    {notice.pin && <span className="pin">📌</span>}
                                 </div>
 
                                 <h3>{notice.title}</h3>
                                 <div className="notice-meta">
-                                    <span>👤 {notice.author}</span>
-                                    <span><FiCalendar /> {notice.date}</span>
+                                    <span><FiCalendar /> {new Date(notice.date).toLocaleString()}</span>
                                     <span>🏫 {notice.department}</span>
                                 </div>
 
@@ -169,8 +169,8 @@ const NoticeBoard = () => {
 
                                 <div className="notice-footer">
                                     <div className="notice-actions">
-                                        <span><FiEye /> {notice.views}</span>
-                                        <span><FiMessageSquare /> {notice.comments}</span>
+                                        <span><FiEye /> {notice.views || 0}</span>
+                                        <span><FiMessageSquare /> {notice.comments || 0}</span>
 
                                         {(userRole === "admin" || userRole === "faculty") && (
                                             <div className="edit-delete-buttons">
@@ -204,7 +204,7 @@ const NoticeBoard = () => {
                             />
                             <input
                                 type="text"
-                                placeholder="Priority"
+                                placeholder="Priority (High/Medium/Low)"
                                 value={priority}
                                 onChange={(e) => setPriority(e.target.value)}
                             />
@@ -224,7 +224,7 @@ const NoticeBoard = () => {
                                 <button onClick={handleSubmit}>
                                     {editingNoticeId ? "Update" : "Post"}
                                 </button>
-                                <button onClick={() => setShowModal(false)}>Cancel</button>
+                                <button onClick={clearForm}>Cancel</button>
                             </div>
                         </div>
                     </div>

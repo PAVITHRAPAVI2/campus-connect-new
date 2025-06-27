@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import '../../Pages/styles/GroupChat.css';
+import './groupchat.css';
 import DashboardLayout from '../../components/DashboardLayout';
 
 

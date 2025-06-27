@@ -1,6 +1,8 @@
 ﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './forget.css';
+import BASE_URL from '../../config'; // your API base URL
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -13,66 +15,85 @@ const ForgotPassword = () => {
 
     const navigate = useNavigate();
 
-    const handleSendOtp = (e) => {
+    // Step 1: Send OTP
+    const handleSendOtp = async (e) => {
         e.preventDefault();
-        if (!email) {
-            setError('Email is required');
-            return;
-        }
         setError('');
-        setMessage(`OTP sent to ${email}`);
-        setStep(2);
-        setTimeout(() => setMessage(''), 3000); // hide after 3s
+        setMessage('');
+        try {
+            const res = await axios.post(`${BASE_URL}/Auth/forgot-password`, {
+                email: email.trim().toLowerCase()
+            });
+            setMessage(res.data || 'OTP sent to your email.');
+            setStep(2);
+        } catch (err) {
+            setError(err.response?.data || 'Failed to send OTP');
+        }
     };
 
-    const handleVerifyOtp = (e) => {
+    // Step 2: Verify OTP
+    const handleVerifyOtp = async (e) => {
         e.preventDefault();
-        if (!otp) {
-            setError('OTP is required');
-            return;
-        }
         setError('');
-        setMessage(`OTP verified for ${email}`);
-        setStep(3);
-        setTimeout(() => setMessage(''), 3000); // hide after 3s
+        setMessage('');
+        try {
+            const res = await axios.post(`${BASE_URL}/Auth/verify-otp`, {
+                email: email.trim().toLowerCase(),
+                otp: otp
+            });
+            setMessage(res.data || 'OTP verified successfully');
+            setStep(3);
+        } catch (err) {
+            setError(err.response?.data || 'Invalid or expired OTP');
+        }
     };
 
-    const handleResetPassword = (e) => {
+    // Step 3: Reset Password
+    const handleResetPassword = async (e) => {
         e.preventDefault();
+        setError('');
+        setMessage('');
+
         if (!newPassword || !confirmPassword) {
-            setError('Both password fields are required');
-            return;
-        }
-        if (newPassword !== confirmPassword) {
-            setError('Passwords do not match');
+            setError('Both password fields are required.');
             return;
         }
 
-        setError('');
-        setMessage('Password has been reset successfully!');
-        setTimeout(() => {
-            setMessage('');
-            navigate('/login');
-        }, 2000);
+        if (newPassword !== confirmPassword) {
+            setError('Passwords do not match.');
+            return;
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/Auth/reset-password`, {
+                email: email.trim().toLowerCase(),
+                newPassword,
+                confirmPassword
+            });
+            setMessage(res.data || 'Password reset successfully!');
+            setTimeout(() => navigate('/login'), 2000);
+        } catch (err) {
+            setError(err.response?.data || 'Failed to reset password');
+        }
+    };
+
+    const handleSubmit = (e) => {
+        if (step === 1) return handleSendOtp(e);
+        else if (step === 2) return handleVerifyOtp(e);
+        else return handleResetPassword(e);
     };
 
     return (
         <div className="forgot-password-container">
             <h2>Forgot Password</h2>
-
-            <form onSubmit={
-                step === 1
-                    ? handleSendOtp
-                    : step === 2
-                        ? handleVerifyOtp
-                        : handleResetPassword
-            }>
+            <form onSubmit={handleSubmit}>
                 <input
                     type="email"
-                    placeholder="Enter your registered email"
+                    placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     readOnly={step > 1}
+                    required
                 />
 
                 {step >= 2 && (
@@ -82,6 +103,7 @@ const ForgotPassword = () => {
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
                         readOnly={step === 3}
+                        required
                     />
                 )}
 
@@ -89,26 +111,28 @@ const ForgotPassword = () => {
                     <>
                         <input
                             type="password"
-                            placeholder="Enter New Password"
+                            placeholder="New Password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
+                            required
                         />
                         <input
                             type="password"
-                            placeholder="Confirm New Password"
+                            placeholder="Confirm Password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
                         />
                     </>
                 )}
 
                 <button type="submit">
-                    {step === 1 ? 'Send OTP' : step === 2 ? 'Verify' : 'Reset Password'}
+                    {step === 1 ? 'Send OTP' : step === 2 ? 'Verify OTP' : 'Reset Password'}
                 </button>
             </form>
 
             {error && <p className="error-msg">{error}</p>}
-            {message && <p className="plain-msg">{message}</p>} {/* ✨ Plain message */}
+            {message && <p className="plain-msg">{message}</p>}
         </div>
     );
 };

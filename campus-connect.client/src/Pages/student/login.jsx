@@ -27,18 +27,22 @@ const LoginPage = () => {
                 password
             });
 
-            if (response.data && response.data.token) {
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('userId', response.data.userId);
-                localStorage.setItem('userName', response.data.name);
-                localStorage.setItem('userRole', response.data.role);
+            console.log("Login Response:", response.data);
 
+            const token = response.data.token;
+            const userId = response.data.userId;
+            const userName = response.data.userName || "User";
+            const userRole = response.data.role || "Role";
 
-                // ✅ Show success message inside form
+            if (token) {
+                localStorage.setItem('token', token);
+                localStorage.setItem('userId', userId || '');
+                localStorage.setItem('userName', userName);
+                localStorage.setItem('userRole', userRole);
+
                 setSuccessMessage('Login successful! Redirecting...');
                 setError('');
 
-                // Delay navigation
                 setTimeout(() => {
                     navigate('/dashboard');
                 }, 1500);
@@ -86,15 +90,8 @@ const LoginPage = () => {
 
                     <button type="submit">Login</button>
 
-                    {/* ✅ Show messages inside the form */}
                     {error && <p className="error-msg">{error}</p>}
                     {successMessage && <p className="success-msg">{successMessage}</p>}
-
-                    {/*<div className="register-link">*/}
-                    {/*    <p>*/}
-                    {/*        Don't have an account? <Link to="/register">Register here</Link>*/}
-                    {/*    </p>*/}
-                    {/*</div>*/}
                 </form>
             </div>
 

@@ -14,7 +14,7 @@ import DepartmentGroupChatContent from './Pages/Admin/depgroupchat.jsx';
 const App = () => {
     return (
         <Routes>
-            <Route path="/" element={<Navigate to="/login" />} />
+            
             <Route path="/login" element={<LoginPage />} />
             <Route path="/usermanagement" element={<ManageStudents />} />
             <Route path="/studentapproval" element={<StudentApproval />} />

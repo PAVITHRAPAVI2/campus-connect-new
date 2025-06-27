@@ -13,7 +13,7 @@ namespace campus_connect.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20250623101200_initialcreate")]
-    partial class initialcreate
+    partial class Initialcreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

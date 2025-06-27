@@ -20,7 +20,6 @@ namespace CampusConnectAPI.Controllers
 
         // POST: api/faculty/register
         [HttpPost("register")]
-        [AllowAnonymous]
         [Authorize(Roles = "admin")] // Only admin can register a faculty
         public async Task<IActionResult> RegisterFaculty([FromBody] FacultyCreateDto dto)
         {
@@ -63,6 +62,48 @@ namespace CampusConnectAPI.Controllers
                 .ToListAsync();
 
             return Ok(list);
+        }
+
+        // PUT: api/faculty/{id}
+        [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> UpdateFaculty(Guid id, [FromBody] FacultyUpdateDto dto)
+        {
+            var faculty = await _context.Faculties.FindAsync(id);
+            if (faculty == null || faculty.IsDeleted)
+                return NotFound("Faculty not found");
+
+            // Optional: Check if email is already used by another faculty
+            var emailUsed = await _context.Faculties.AnyAsync(f => f.Email == dto.Email && f.Id != id);
+            if (emailUsed)
+                return BadRequest("Another faculty already uses this email.");
+
+            faculty.FullName = dto.FullName;
+            faculty.Email = dto.Email;
+            faculty.Department = dto.Department;
+            faculty.IsApproved = dto.IsApproved;
+            faculty.UpdatedBy = User.Identity?.Name ?? "System";
+            faculty.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Ok("Faculty updated successfully.");
+        }
+
+        // DELETE: api/faculty/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeleteFaculty(int id)
+        {
+            var faculty = await _context.Faculties.FindAsync(id);
+            if (faculty == null || faculty.IsDeleted)
+                return NotFound("Faculty not found");
+
+            faculty.IsDeleted = true;
+            faculty.UpdatedBy = User.Identity?.Name ?? "System";
+            faculty.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Ok("Faculty soft-deleted.");
         }
     }
 }

@@ -44,8 +44,11 @@ namespace campus_connect.Server.Controllers
         [Authorize]
         public async Task<IActionResult> GetGroupMessages(Guid groupId)
         {
-            var group = await _context.MessageGroups.FirstOrDefaultAsync(g => g.Id == groupId && !g.IsDeleted);
-            if (group == null) return NotFound("Group not found");
+            var group = await _context.MessageGroups
+                .FirstOrDefaultAsync(g => g.Id == groupId && !g.IsDeleted);
+
+            if (group == null)
+                return NotFound("Group not found");
 
             var userDept = User.FindFirst("Department")?.Value;
             if (!group.IsCommon && group.Department != userDept)
@@ -71,12 +74,18 @@ namespace campus_connect.Server.Controllers
         [Authorize]
         public async Task<IActionResult> SendMessage([FromBody] CreateMessageDto dto)
         {
-            var group = await _context.MessageGroups.FirstOrDefaultAsync(g => g.Id == dto.GroupId && !g.IsDeleted);
-            if (group == null) return NotFound("Group not found");
+            var group = await _context.MessageGroups
+                .FirstOrDefaultAsync(g => g.Id == dto.GroupId && !g.IsDeleted);
+
+            if (group == null)
+                return NotFound("Group not found");
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
             var department = User.FindFirst("Department")?.Value;
+
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(role))
+                return Unauthorized("Invalid user token claims");
 
             if (!group.IsCommon && group.Department != department)
                 return Forbid("Unauthorized");
@@ -84,8 +93,8 @@ namespace campus_connect.Server.Controllers
             var message = new Message
             {
                 Content = dto.Content,
-                SenderCollegeId = userId!,
-                SenderRole = role!,
+                SenderCollegeId = userId,
+                SenderRole = role,
                 GroupId = group.Id,
                 CreatedBy = userId,
                 UpdatedBy = userId

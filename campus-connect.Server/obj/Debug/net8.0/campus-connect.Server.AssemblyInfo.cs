@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("campus-connect.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a3ac888506149f96558cf7c6fa86bcbb897d25cf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3cf3888c087cf14bc7edc9a42ecb88de88b493a6")]
 [assembly: System.Reflection.AssemblyProductAttribute("campus-connect.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("campus-connect.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

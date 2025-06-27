@@ -3,10 +3,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #084c4c; /* your primary teal */
+    background-color: #808080; /* your primary teal */
     padding: 1rem 2rem;
     color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgb(32, 15, 62, 0.10);
 }
 
 .logo {

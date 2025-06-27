@@ -2,8 +2,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../Pages/Student/student style/Login.css';
-import Navbar from '../../components/Styless/Navbar';
-import Footer from '../../components/Styless/Footer';
 import BASE_URL from '../../config.js';
 
 const LoginPage = () => {
@@ -64,7 +62,7 @@ const LoginPage = () => {
  
   return (
     <>
-      <Navbar />
+      
 
       <div className="login-wrapper">
         <form className="login-container" onSubmit={handleSubmit}>
@@ -101,7 +99,7 @@ const LoginPage = () => {
         </form>
       </div>
 
-      <Footer />
+      
     </>
   );
 };

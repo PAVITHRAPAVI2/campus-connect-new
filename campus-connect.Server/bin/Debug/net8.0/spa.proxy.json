@@ -3,7 +3,7 @@
 "ServerUrl": "https://localhost:50439",
 "RedirectUrl": "",
 "LaunchCommand": "npm run dev",
-"WorkingDirectory": "C:\\Users\\ADMIN\\source\\repos\\campus-connect\\campus-connect\\campus-connect.Server\\..\\campus-connect.client",
+"WorkingDirectory": "C:\\Users\\ASUS\\source\\New folder\\campus-connect.Server\\..\\campus-connect.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }

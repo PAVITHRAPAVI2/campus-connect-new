@@ -4,7 +4,8 @@
     "Projects": [
       {
         "Path": "campus-connect.client\\campus-connect.client.esproj",
-        "Action": "Start"
+        "Action": "StartWithoutDebugging",
+        "DebugTarget": "localhost (Chrome)"
       },
       {
         "Path": "campus-connect.Server\\campus-connect.Server.csproj",

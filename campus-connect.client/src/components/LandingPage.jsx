@@ -1,13 +1,8 @@
-<<<<<<< Updated upstream
-import React from 'react';
-import './Styless/navbar.css'; // or separate Navbar CSS if needed
-=======
 ﻿import React from 'react';
 import './Styless/LandingPage.css';
 import landingbg from '../assets/landingbgimage.png';
 import Navbar from './Navbar';
 import Footer from './Footer';
->>>>>>> Stashed changes
 
 
 const LandingPage = () => {
@@ -17,9 +12,6 @@ const LandingPage = () => {
             <div
                 className="hero"
 
-<<<<<<< Updated upstream
-export default Navbar;
-=======
             >
                 <div className="hero-content" style={{ backgroundImage: `url(${landingbg})` }}
                 >
@@ -68,4 +60,4 @@ export default Navbar;
 };
 
 export default LandingPage;
->>>>>>> Stashed changes
+ 

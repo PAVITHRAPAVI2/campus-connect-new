@@ -1,52 +1,108 @@
-/* Navbar styles */
+/* Navbar container */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #084c4c; /* your primary teal */
-    padding: 1rem 2rem;
+    background-color: #3f3d56; /* dark blue-gray */
+    padding: 12px 24px;
     color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* Logo container */
 .logo {
-    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.logo-img {
+    height: 40px;
+    width: auto;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Buttons container */
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Reusable button style */
+.btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* Specific button colors */
+.login-btn {
+    background-color: #4caf50;
+    color: white;
+}
+
+.signup-btn {
+    background-color: #2196f3;
+    color: white;
+}
+
+.logout-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Welcome message with role badge */
+.welcome-msg {
+    font-weight: 500;
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge {
+    background-color: gold;
+    color: black;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
     font-weight: bold;
 }
 
-.nav-buttons {
-    display: flex;
-    gap: 1rem;
-}
-
-.btn {
-    padding: 0.5rem 1.2rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-    line-height: 1.5;
-    white-space: nowrap; 
-}
-
-/* Login button style */
-.login-btn {
-    background-color: white;
-    color: #084c4c;
-}
-
-    .login-btn:hover {
-        background-color: #f3f4f6;
+/* Responsive design */
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px;
     }
 
-/* Sign up button style */
-.signup-btn {
-    background-color: #10b981; /* mint green */
-    color: white;
-}
-
-    .signup-btn:hover {
-        background-color: #0ea67a;
+    .nav-buttons {
+        margin-top: 10px;
+        flex-wrap: wrap;
+        gap: 8px;
     }
+
+    .logo-img {
+        height: 30px;
+    }
+
+    .logo-text {
+        font-size: 18px;
+    }
+}

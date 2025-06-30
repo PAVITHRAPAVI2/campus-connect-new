@@ -90,6 +90,34 @@ namespace campus_connect.Server.Controllers
 
             return Ok(faculty);
         }
+
+        // PUT: api/faculty/{id}
+        [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> UpdateFaculty(Guid id, [FromBody] FacultyUpdateDto dto)
+        {
+            var faculty = await _context.Faculties.FindAsync(id);
+            if (faculty == null || faculty.IsDeleted)
+                return NotFound("Faculty not found");
+
+            // Optional: Check if email is already used by another faculty
+            var emailUsed = await _context.Faculties.AnyAsync(f => f.Email == dto.Email && f.Id != id);
+            if (emailUsed)
+                return BadRequest("Another faculty already uses this email.");
+
+            faculty.FullName = dto.FullName;
+            faculty.Email = dto.Email;
+            faculty.Department = dto.Department;
+            faculty.IsApproved = dto.IsApproved;
+            faculty.UpdatedBy = User.Identity?.Name ?? "System";
+            faculty.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Ok("Faculty updated successfully.");
+        }
+
+
+
         [HttpDelete("faculties/{id}")]
         //[Authorize(Roles = "admin")]
         public async Task<IActionResult> SoftDeleteFaculty(Guid id)

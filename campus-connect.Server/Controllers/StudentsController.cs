@@ -1,6 +1,7 @@
 ﻿using campus_connect.Server.Model.DTO;
 using CampusConnectAPI.Data;
 using CampusConnectAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -96,7 +97,21 @@ namespace campus_connect.Server.Controllers
 
             return Ok(students);
         }
+        [HttpPut("students/profile/{id}")]
+        public async Task<IActionResult> UpdateStudentProfile (Guid id, [FromBody] UpdateStudentProfileDto dto)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student == null || student.IsDeleted)
+                return NotFound("Student not found.");
 
+            student.FullName = dto.FullName;
+            student.Email = dto.Email;
+            student.UpdatedAt = DateTime.UtcNow;
+            student.UpdatedBy = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
+
+            await _context.SaveChangesAsync();
+            return Ok("Student updated successfully.");
+        }
 
         [HttpPut("students/{id}")]
         public async Task<IActionResult> UpdateStudent(Guid id, [FromBody] UpdateStudentDto dto)
@@ -106,6 +121,7 @@ namespace campus_connect.Server.Controllers
                 return NotFound("Student not found.");
 
             student.FullName = dto.FullName;
+            student.Email = dto.Email;
             student.Department = dto.Department;
             student.Batch = dto.Batch;
             student.Avatar = dto.Avatar;
@@ -116,8 +132,8 @@ namespace campus_connect.Server.Controllers
             return Ok("Student updated successfully.");
         }
 
-        [HttpPut("students/{id}/restore")]
-        //[Authorize(Roles = "admin")]
+        [HttpPut("students/restore/{id}")]
+        [Authorize(Roles = "admin,faculty")]
         public async Task<IActionResult> RestoreStudent(Guid id)
         {
             var student = await _context.Students

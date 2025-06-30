@@ -150,7 +150,7 @@ namespace campus_connect.Server.Controllers
             {
                 if (userRole != "admin")
                     return Forbid("Only admin can delete this group created by an admin.");
-            }
+            }  
 
             // If faculty created:
             else if (group.CreatedByRole == "faculty")

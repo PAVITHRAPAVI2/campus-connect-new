@@ -4,8 +4,10 @@ using CampusConnectAPI.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+
 
 namespace campus_connect.Server.Controllers
 {
@@ -14,10 +16,12 @@ namespace campus_connect.Server.Controllers
     public class MessageController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public MessageController(AppDbContext context)
+        public MessageController(AppDbContext context , IHubContext<ChatHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         // ✅ Get All Accessible Groups
@@ -70,9 +74,8 @@ namespace campus_connect.Server.Controllers
             return Ok(messages);
         }
 
-        
         [HttpPost("send")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> SendMessage([FromBody] CreateMessageDto dto)
         {
             var group = await _context.MessageGroups.FirstOrDefaultAsync(g => g.Id == dto.GroupId && !g.IsDeleted);
@@ -98,7 +101,17 @@ namespace campus_connect.Server.Controllers
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 
-            return Ok("Message sent");
+            
+            await _hubContext.Clients.Group(dto.GroupId.ToString()).SendAsync("ReceiveMessage", new
+            {
+                Id = message.Id,
+                Content = message.Content,
+                SenderCollegeId = message.SenderCollegeId,
+                SenderRole = message.SenderRole,
+                SentAt = message.CreatedAt
+            });
+
+            return Ok("Message sent and Group.");
         }
 
         // ✅ Update a message (only sender can update)

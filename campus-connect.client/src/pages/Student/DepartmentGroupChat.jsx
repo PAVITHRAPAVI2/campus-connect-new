@@ -1,146 +1,109 @@
-﻿// src/Pages/Chat/CommonGroupChat.jsx
-import React, { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
+﻿import React, { useEffect, useState, useRef } from 'react';
+import '../../Pages/Student/student style/Chat.css';
 import DashboardLayout from '../../components/Styless/DashboardLayout';
-import './student style/Chat.css';
+import BASE_URL from '../../config';
 
-/* ───────────────────────── AXIOS SETUP ───────────────────────── */
-const API = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE || '', // Set your backend URL in .env
+const hdr = () => ({
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json',
 });
 
-API.interceptors.request.use(config => {
-    const token = localStorage.getItem('token');
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-
-    // Force no-cache headers
-    config.headers['Cache-Control'] = 'no-cache';
-    config.headers['Pragma'] = 'no-cache';
-    config.headers['Expires'] = '0';
-
-    return config;
+const toCamelMsg = (m) => ({
+    id: m.Id,
+    content: m.Content,
+    senderCollegeId: m.SenderCollegeId,
+    senderRole: m.SenderRole,
+    sentAt: m.SentAt,
 });
 
-/* ───────────────────────── COMPONENT ───────────────────────── */
-function CommonGroupChatContent() {
-    const [user, setUser] = useState(null);
-    const [groups, setGroups] = useState([]);
-    const [messages, setMessages] = useState([]);
-    const [selectedGroup, setSelectedGroup] = useState(null);
-    const [input, setInput] = useState('');
+function DepartmentChatInner() {
+    const [profile, setProfile] = useState(null);
+    const [group, setGroup] = useState(null);
+    const [msgs, setMsgs] = useState([]);
+    const [text, setText] = useState('');
+    const chatRef = useRef(null);
 
-    /* ─────── GET USER PROFILE ─────── */
+    /* fetch profile */
     useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const { data } = await API.get(`/api/Auth/profile?ts=${Date.now()}`);
-                setUser(data);
-            } catch (error) {
-                console.error('Error fetching profile:', error);
-            }
-        };
-        fetchProfile();
+        (async () => {
+            const res = await fetch(`${BASE_URL}/api/Auth/profile`, { headers: hdr() });
+            setProfile(await res.json());           // <-- no { data } destructure
+        })();
     }, []);
 
-    /* ─────── GET GROUPS ─────── */
+    /* find department group */
     useEffect(() => {
-        const fetchGroups = async () => {
-            try {
-                const { data } = await API.get(`/api/MessageGroups/my-groups?ts=${Date.now()}`);
-                setGroups(data);
-                if (data.length > 0) setSelectedGroup(data[0]);
-            } catch (error) {
-                console.error('Error fetching groups:', error);
-            }
-        };
-        fetchGroups();
-    }, []);
+        if (!profile) return;
+        (async () => {
+            const arr = await (await fetch(`${BASE_URL}/api/MessageGroups/my-groups`, { headers: hdr() })).json();
+            const dept = profile.department ?? profile.Department;
+            const g = arr.find((x) => !x.isCommon && (x.department ?? x.Department) === dept);
+            setGroup(g || null);
+            if (g) loadMsgs(g.id);
+        })();
+    }, [profile]);
 
-    /* ─────── GET MESSAGES ─────── */
-    const fetchMessages = useCallback(async (groupId) => {
-        try {
-            const { data } = await API.get(`/api/Messages/group/${groupId}?ts=${Date.now()}`);
-            setMessages(data);
-        } catch (error) {
-            console.error('Error fetching messages:', error);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (selectedGroup?.id) fetchMessages(selectedGroup.id);
-    }, [selectedGroup, fetchMessages]);
-
-    /* ─────── SEND MESSAGE ─────── */
-    const handleSend = async () => {
-        const trimmed = input.trim();
-        if (!trimmed || !selectedGroup) return;
-
-        try {
-            const res = await API.post(`/api/Messages/group/${selectedGroup.id}`, {
-                text: trimmed,
-            });
-            setMessages(prev => [...prev, res.data]);
-            setInput('');
-        } catch (error) {
-            console.error('Error sending message:', error);
-        }
+    /* load messages */
+    const loadMsgs = async (gid) => {
+        const data = await (await fetch(`${BASE_URL}/api/Message/groups/${gid}/messages`, { headers: hdr() })).json();
+        setMsgs(data.map(toCamelMsg));
     };
 
+    /* send */
+    const send = async () => {
+        if (!text.trim() || !group) return;
+        await fetch(`${BASE_URL}/api/Message/send`, {
+            method: 'POST',
+            headers: hdr(),
+            body: JSON.stringify({ GroupId: group.id, Content: text.trim() }),
+        });
+        setText('');
+        loadMsgs(group.id);
+    };
+
+    useEffect(() => {
+        chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight });
+    }, [msgs]);
+
+    const myId = profile?.collegeId ?? profile?.CollegeId;
+
     return (
-        <div className="chat-wrapper">
-            {/* GROUPS SIDEBAR */}
-            <aside className="chat-groups">
-                <h4 className="heading">Groups</h4>
-                {groups.map(group => (
-                    <button
-                        key={group.id}
-                        className={`group-btn ${selectedGroup?.id === group.id ? 'active' : ''}`}
-                        onClick={() => setSelectedGroup(group)}
+        <section className="chat-panel">
+            <header className="chat-header">{group ? group.name : 'Department Chat'}</header>
+
+            <div className="chat-box" ref={chatRef}>
+                {msgs.map((m) => (
+                    <div
+                        key={m.id}
+                        className={`chat-message ${m.senderCollegeId === myId ? 'sent' : 'received'}`}
                     >
-                        {group.name} {group.isCommon ? '🌐' : ''}
-                    </button>
-                ))}
-            </aside>
-
-            {/* CHAT PANEL */}
-            <section className="chat-panel">
-                <header className="chat-header">
-                    {selectedGroup ? selectedGroup.name : 'Select a Group'}
-                </header>
-
-                <div className="chat-box">
-                    {messages.map((msg, idx) => (
-                        <div
-                            key={idx}
-                            className={`chat-message ${msg.senderId === user?.id ? 'sent' : 'received'}`}
-                        >
-                            <span className="sender">{msg.senderName}:</span> {msg.text}
-                        </div>
-                    ))}
-                </div>
-
-                {selectedGroup && (
-                    <div className="chat-input">
-                        <input
-                            type="text"
-                            placeholder="Type your message…"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                        />
-                        <button onClick={handleSend}>Send</button>
+                        <span className="sender">{m.senderRole}:</span> {m.content}
                     </div>
-                )}
-            </section>
-        </div>
+                ))}
+            </div>
+
+            <div className="chat-input">
+                <input
+                    value={text}
+                    disabled={!group}
+                    placeholder={group ? 'Type a message…' : 'No department group'}
+                    onChange={(e) => setText(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && send()}
+                />
+                <button onClick={send} disabled={!group || !text.trim()}>
+                    Send
+                </button>
+            </div>
+        </section>
     );
 }
 
-/* ─────────── WRAPPED WITH LAYOUT ─────────── */
-export default function CommonGroupChat() {
+export default function DepartmentChat() {
     return (
         <DashboardLayout>
-            <CommonGroupChatContent />
+            <div className="chat-wrapper">
+                <DepartmentChatInner />
+            </div>
         </DashboardLayout>
     );
 }

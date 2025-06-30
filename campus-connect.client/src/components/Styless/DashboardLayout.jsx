@@ -53,8 +53,7 @@ const DashboardLayout = ({ children }) => {
             <header className="navbar">
                 <div className="navbar-left">Campus Connect</div>
                 <div className="navbar-right">
-                    <span className="icon">🔔</span>
-                    <span className="icon">💬</span>
+                   
                     <span className="user-info">
                         {user.name}
                         <span className="badge">{user.role}</span>

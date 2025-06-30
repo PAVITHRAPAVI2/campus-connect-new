@@ -6,3 +6,6 @@
 /campus-connect.Server/obj/Release/net8.0
 /campus-connect.client
 /campus-connect.Server
+/node_modules
+/package-lock.json
+/package.json

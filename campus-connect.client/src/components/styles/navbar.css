@@ -1,0 +1,78 @@
+/* Navbar container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #084c4c; /* primary teal */
+    padding: 1rem 2rem;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Logo styling */
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Button group styling */
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Base button styling */
+.btn {
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+/* Login button */
+.login-btn {
+    background-color: white;
+    color: #084c4c;
+    border: 1px solid #084c4c;
+}
+
+    .login-btn:hover {
+        background-color: #f3f4f6;
+    }
+
+/* Sign up button */
+.signup-btn {
+    background-color: #10b981; /* mint green */
+    color: white;
+}
+
+    .signup-btn:hover {
+        background-color: #0ea67a;
+    }
+
+/* Logout button */
+.logout-btn {
+    background-color: #ef4444; /* red */
+    color: white;
+}
+
+    .logout-btn:hover {
+        background-color: #dc2626;
+    }
+
+/* Welcome message */
+.welcome-msg {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-right: 0.5rem;
+    color: #e0f2f1;
+}

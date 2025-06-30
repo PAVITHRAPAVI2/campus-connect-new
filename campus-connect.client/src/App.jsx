@@ -1,39 +1,63 @@
-import React from 'react';
+﻿import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
-import FacultyDashboard from './Pages/Faculty/Facultydashboard';
+
+import LandingPage from './pages/Faculty/LandingPage';
+import LoginPage from './components/LoginPage';
+import Register from './components/Register';
+
 import DashboardLayout from './components/DashboardLayout';
-import GroupChat from './Pages/Faculty/GroupChat';
-import NoticeBoard from './Pages/Faculty/NoticeBoard';
-import LoginPage from './Pages/Login';
-import StudentApproval from './Pages/Faculty/StudentApproval';
-import DepartmentGroupChat from './Pages/Faculty/DepartmentChat';
-import Register from './Pages/Register';
-import ManageStudents from './Pages/Faculty/ManageStudent';
-import ManageFaculty from './Pages/Admin/managefaculty';
-import StudentDashboard from './Pages/Student/StudentDashboard';
+import NoticeBoard from './components/NoticeBoard';
+import StudentApproval from './components/StudentApproval';
+import CommonGroupChat from './components/CommonGroupChat';
+import DepartmentGroupChat from './components/DepartmentGroupChat';
+import ManageStudents from './components/ManageStudents';
+
+import ProtectedRoute from './components/ProtectedRoute';
+import FacultyDashboard from './components/Facultydashboard';
 
 
-const App= () =>{
+const App = () => {
     return (
         <Router>
             <Routes>
+                {/* Public */}
                 <Route path="/" element={<LandingPage />} />
-                <Route path="/faculty" element={< FacultyDashboard />} />
-                <Route path="/DashboardLayout" element={< DashboardLayout />} />
-                <Route path="/faculty/Groupchat" element={< GroupChat />} />
-                <Route path="/faculty/Notice" element={< NoticeBoard />} />
-                <Route path="/login" element={< LoginPage/>} />
-                <Route path="/faculty/Approval" element={< StudentApproval/>} />
-                <Route path="/faculty/departmentchat" element={< DepartmentGroupChat />} />
-                <Route path="/Signup" element={< Register />} />
-                <Route path="/Faculty/ManageStudent" element={< ManageStudents />} />
-                <Route path="/admin/ManageStudent" element={<ManageFaculty />} />
-                <Route path="/student" element={<StudentDashboard/>} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<Register />} />
 
+                {/* Faculty Dashboard */}
+                <Route
+                    path="/faculty"
+                    element={
+                        <ProtectedRoute allowedRoles={['Faculty']}>
+                            <DashboardLayout />
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route index element={<h2>Welcome Faculty</h2>} />
+                    <Route path="notice-board" element={<NoticeBoard />} />
+                    <Route path="student-approvals" element={<StudentApproval />} />
+                    <Route path="group-chat" element={<CommonGroupChat />} />
+                    <Route path="manage-students" element={<ManageStudents />} />
+                    <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
 
+                </Route>
+
+                {/* Department Group Chat */}
+                <Route
+                    path="/chat/department/:department"
+                    element={
+                        <ProtectedRoute allowedRoles={['Faculty']}>
+                            <DepartmentGroupChat />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* Catch-all */}
+                {/*<Route path="*" element={<h2>404 - Page Not Found</h2>} />*/}
             </Routes>
         </Router>
     );
-}
+};
+
 export default App;

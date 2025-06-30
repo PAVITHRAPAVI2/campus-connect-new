@@ -1,2 +1,0 @@
-C:\Users\key 3\source\repos\campusconnect\campusconnect.client\obj\Debug\campusconnect.client.esproj.CoreCompileInputs.cache
-C:\Users\key 3\source\repos\CAMPUS-CONNET\campusconnect.client\obj\Debug\campusconnect.client.esproj.CoreCompileInputs.cache

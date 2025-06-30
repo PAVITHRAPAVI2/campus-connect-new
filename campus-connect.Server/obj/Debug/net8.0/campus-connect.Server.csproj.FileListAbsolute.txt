@@ -1,9 +1,0 @@
-C:\Users\key 3\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.csproj.AssemblyReference.cache
-C:\Users\key 3\source\New folder\campus-connect.Server\obj\Debug\net8.0\spa.proxy.json
-C:\Users\key 3\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\key 3\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.AssemblyInfoInputs.cache
-C:\Users\key 3\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.AssemblyInfo.cs
-C:\Users\key 3\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.csproj.CoreCompileInputs.cache
-C:\Users\key 3\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\key 3\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\key 3\source\New folder\campus-connect.Server\obj\Debug\net8.0\campus-connect.Server.sourcelink.json

@@ -1,0 +1,242 @@
+﻿.noticeboard-container {
+    padding: 24px 32px;
+    background-color: #f9fafb;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+    .noticeboard-container h2 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+.noticeboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-btn {
+    background-color: #1d4ed8;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.3s ease;
+    max-width: fit-content;
+    height: 32px;
+}
+
+    .create-btn:hover {
+        background-color: #1749b3;
+    }
+
+
+.noticeboard-container p {
+    margin-bottom: 16px;
+    color: #555;
+}
+
+.notice-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+    .notice-filters input,
+    .notice-filters select {
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 200px;
+    }
+
+/* Notice Cards */
+.notices-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.notice-card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #e1e1e1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.notice-tags {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.tag {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.high {
+    background-color: #ffe5e5;
+    color: #d60000;
+}
+
+.medium {
+    background-color: #fff6d6;
+    color: #c78c00;
+}
+
+.category {
+    background-color: #e6f0ff;
+    color: #3366cc;
+}
+
+.pin {
+    font-size: 18px;
+    margin-left: auto;
+}
+
+.notice-meta {
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.notice-content {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.notice-footer {
+    font-size: 13px;
+    color: #777;
+    display: flex;
+    gap: 20px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Modal Box */
+.modal {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+}
+
+/* Modal Form Inputs */
+.modal input,
+.modal textarea,
+.modal select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Dropdown section inside modal */
+.modal-dropdowns {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+    .modal-dropdowns label {
+        font-weight: 600;
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 2px;
+    }
+
+/* Modal Action Buttons */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.publish-btn {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.modal-actions button {
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background-color: #f3f4f6;
+    color: #333;
+}
+
+/* Responsive Fixes */
+@media (max-width: 600px) {
+    .notice-filters {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .create-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}

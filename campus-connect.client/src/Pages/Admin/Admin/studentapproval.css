@@ -1,0 +1,90 @@
+.user-management-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 32px 40px;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+    .user-management-container h2 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .user-management-container p {
+        color: #666;
+        margin-bottom: 24px;
+    }
+
+.user-table {
+    width: 100%;
+}
+
+.table-header,
+.table-row {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1.5fr 1.5fr 1fr 1.5fr 1fr;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
+    align-items: center;
+    font-size: 14px;
+}
+
+.table-header {
+    font-weight: bold;
+    color: #333;
+}
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    font-weight: bold;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+}
+
+    .badge.approved {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge.pending {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.approve-icon {
+    color: green;
+    cursor: pointer;
+}
+
+.reject-icon {
+    color: red;
+    cursor: pointer;
+}

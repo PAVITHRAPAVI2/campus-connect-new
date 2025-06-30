@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+/* Container */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #f9fafb;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-left {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.user-info {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.badge {
+    background-color: #dbeafe;
+    color: #1e3a8a;
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.5rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+}
+
+/* Main Layout */
+.dashboard-body {
+    flex: 1;
+    display: flex;
+}
+
+/* Sidebar (left) */
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    border-right: 1px solid #e5e7eb;
+}
+
+    .sidebar nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .sidebar nav ul li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #374151;
+        }
+
+            .sidebar nav ul li:hover,
+            .sidebar nav ul li.active {
+                background-color: #e0f2fe;
+                color: #0284c7;
+            }
+
+/* Logout Button */
+.logout-btn-sidebar {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+}
+
+/* Footer */
+.footer {
+    background-color: #f9fafb;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #6b7280;
+    border-top: 1px solid #e5e7eb;
+}

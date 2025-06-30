@@ -1,0 +1,9 @@
+/* === Footer Styles === */
+.footer {
+    background-color: #8b5cf6;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.95rem;
+    margin-top: auto;
+}

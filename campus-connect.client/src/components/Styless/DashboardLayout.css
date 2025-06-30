@@ -1,0 +1,169 @@
+/* Reset and base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f3f4f6;
+}
+
+/* Layout container */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #10b981;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #1f2937;
+}
+
+.navbar-left {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.user-info {
+    font-weight: 500;
+}
+
+.badge {
+    background-color: #dbeafe;
+    color: #1e3a8a;
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.5rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+}
+
+/* Body (Main + Sidebar) */
+.dashboard-body {
+    flex: 1;
+    display: flex;
+    flex-direction: row-reverse; /* right sidebar */
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: #ffffff;
+    border-left: 1px solid #e5e7eb;
+    padding: 2rem 1.5rem;
+}
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar li {
+        margin-bottom: 1rem;
+    }
+
+    /* Links & buttons inside sidebar */
+    .sidebar a,
+    .sidebar .logout-link,
+    .dropdown-btn {
+        text-decoration: none;
+        color: #111;
+        font-weight: 500;
+        cursor: pointer;
+        background: none;
+        border: none;
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+        .sidebar a:hover,
+        .sidebar .logout-link:hover,
+        .dropdown-btn:hover {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+
+/* Dropdown button (Group Chat) */
+.dropdown-btn {
+    position: relative;
+}
+
+.dropdown.open .dropdown-btn {
+    background-color: #dbeafe;
+    color: #1e3a8a;
+}
+
+/* Caret arrow */
+.caret {
+    float: right;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    color: #666;
+}
+
+/* Dropdown menu */
+.dropdown-list {
+    list-style: none;
+    padding-left: 1.5rem;
+    margin: 0.3rem 0;
+}
+
+    .dropdown-list li {
+        margin: 0.2rem 0;
+    }
+
+    .dropdown-list a {
+        text-decoration: none;
+        color: #333;
+        font-size: 0.9rem;
+        display: block;
+        padding: 6px 0;
+    }
+
+        .dropdown-list a:hover {
+            color: #0284c7;
+        }
+
+/* Footer */
+.footer {
+    background-color: #10b981;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #f3f4f6;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Logout link */
+.logout-link {
+    color: #d9534f;
+}

@@ -1,13 +1,26 @@
-﻿import { StrictMode } from 'react';
+
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom'; // ✅ add this
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <BrowserRouter> {/* ✅ wrap App with router */}
+        <BrowserRouter>
             <App />
         </BrowserRouter>
     </StrictMode>
 );
+
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import '../src/index.css';
+import App from '../src/App.jsx';
+
+createRoot(document.getElementById('root')).render(
+    <StrictMode>
+        <App />
+    </StrictMode>,
+)

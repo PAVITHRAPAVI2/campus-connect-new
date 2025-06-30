@@ -1,4 +1,4 @@
-﻿/* Navbar container */
+/* Navbar container */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -43,9 +43,9 @@
     color: #084c4c;
 }
 
-    .login-btn:hover {
-        background-color: #f3f4f6;
-    }
+.login-btn:hover {
+    background-color: #f3f4f6;
+}
 
 /* Sign Up button */
 .signup-btn {
@@ -53,6 +53,6 @@
     color: white;
 }
 
-    .signup-btn:hover {
-        background-color: #0ea67a;
-    }
+.signup-btn:hover {
+    background-color: #0ea67a;
+}

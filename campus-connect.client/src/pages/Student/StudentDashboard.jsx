@@ -15,7 +15,7 @@ function StudentDashboard() {
         <DashboardLayout> 
             <div className="main-center">
                 <section className="greeting">
-                    <h2>Welcome, {userName}!</h2>
+                    <h2>Good afternoon, {userName}!</h2>
                     <p>Welcome to your student dashboard. Here's what's happening in your courses.</p>
                 </section>
 
@@ -43,7 +43,15 @@ function StudentDashboard() {
                     </div>
                 </section>
 
-                
+                <section className="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <ul>
+                        <li>📝 New assignment posted in DBMS</li>
+                        <li>📢 Notice about upcoming exams</li>
+                        <li>💬 New chat message from AI Group</li>
+                        <li>🎯 You scored 18/20 in OOPS quiz</li>
+                    </ul>
+                </section>
             </div>
         </DashboardLayout>
     );

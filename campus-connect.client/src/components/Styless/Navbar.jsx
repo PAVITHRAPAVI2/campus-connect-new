@@ -16,7 +16,6 @@ function Navbar() {
                     Login
                 </button>
                 <button
-
                     className="btn signup-btn"
                     onClick={() => navigate('/register')}
                 >

@@ -3,3 +3,10 @@
 ################################################################################
 
 /.vs
+/campus-connect.client
+/campus-connect.Server
+/node_modules
+/package-lock.json
+/package.json
+/.gitignore
+/.gitignore

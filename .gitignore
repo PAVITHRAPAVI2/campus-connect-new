@@ -4,3 +4,7 @@
 
 /.vs
 /campus-connect.Server/obj/Release/net8.0
+/campus-connect.client/obj/Debug
+/campus-connect.client
+/campus-connect.Server/bin/Debug/net8.0
+/campus-connect.Server/obj/Debug/net8.0

@@ -1,10 +1,12 @@
-﻿################################################################################
+################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
 /.vs
-/campus-connect.Server/obj/Release/net8.0
 /campus-connect.client
+/campus-connect.Server/obj/Release/net8.0
+/campus-connect.Server/obj/Debug/net8.0
+/campus-connect.Server/.config
 /campus-connect.Server
 /node_modules
 /package-lock.json

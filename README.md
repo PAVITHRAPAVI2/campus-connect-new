@@ -1,2 +1,1 @@
-# test
 # campus-connect-new

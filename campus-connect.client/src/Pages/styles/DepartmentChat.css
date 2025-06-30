@@ -1,0 +1,139 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f3f4f6;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #084c4c;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.navbar-left {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.user-info {
+    font-weight: 500;
+    color: white;
+}
+
+.badge {
+    background-color: white;
+    color: #084c4c;
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.5rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+}
+
+/* Layout body */
+.dashboard-body {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: #084c4c;
+    padding: 2rem 1.5rem;
+    color: white;
+}
+
+    .sidebar nav ul {
+        list-style: none;
+    }
+
+        .sidebar nav ul li {
+            margin-bottom: 0.5rem;
+        }
+
+    .sidebar a,
+    .sidebar .dropdown-btn {
+        color: white;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        font-size: 1rem;
+        border: none;
+        background: none;
+        text-align: left;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .sidebar a:hover,
+        .sidebar .dropdown-btn:hover {
+            background-color: #0f766e;
+        }
+
+/* Dropdown list */
+.dropdown-list {
+    list-style: none;
+    padding-left: 1.5rem;
+    margin-top: 0.3rem;
+}
+
+    .dropdown-list li {
+        margin: 0.25rem 0;
+    }
+
+    .dropdown-list a {
+        text-decoration: none;
+        color: #d1fae5;
+        font-size: 0.95rem;
+    }
+
+        .dropdown-list a:hover {
+            text-decoration: underline;
+            color: #a7f3d0;
+        }
+
+/* Main content */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+/* Footer */
+.footer {
+    background-color: #084c4c;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #d1d5db;
+    border-top: 1px solid #e5e7eb;
+}

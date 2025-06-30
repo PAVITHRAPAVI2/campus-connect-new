@@ -27,6 +27,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    width: 13%;
 }
 
 .noticeboard-container p {
@@ -120,33 +121,6 @@
     display: flex;
     gap: 20px;
 }
-
-/* Action Buttons */
-.notice-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 12px;
-}
-
-    .notice-actions button {
-        padding: 6px 12px;
-        font-size: 13px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: background-color 0.2s ease;
-    }
-
-    .notice-actions .edit-btn {
-        background-color: #facc15;
-        color: #1f2937;
-    }
-
-    .notice-actions .delete-btn {
-        background-color: #ef4444;
-        color: white;
-    }
 
 /* Modal Overlay */
 .modal-overlay {
@@ -255,13 +229,4 @@
     .create-btn {
         padding: 6px 12px;
     }
-
-    .notice-actions {
-        flex-direction: column;
-        width: 100%;
-    }
-
-        .notice-actions button {
-            width: 100%;
-        }
 }

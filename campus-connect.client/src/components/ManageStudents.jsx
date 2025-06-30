@@ -1,114 +1,124 @@
 ﻿import React, { useState, useEffect } from 'react';
 import './styles/usermanage.css';
-import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import axios from 'axios';
 import BASE_URL from '../config';
+
+// Decode JWT token
+function decodeToken(token) {
+    if (!token) return null;
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map((c) => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`)
+                .join('')
+        );
+        return JSON.parse(jsonPayload);
+    } catch (err) {
+        console.error('Token decoding failed:', err);
+        return null;
+    }
+}
 
 const ManageStudents = () => {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        fetchStudents();
+        fetchApprovedStudents();
     }, []);
 
-    const fetchStudents = async () => {
+    const fetchApprovedStudents = async () => {
         setLoading(true);
         try {
+            const token = localStorage.getItem('token');
+            const decoded = decodeToken(token);
+            const facultyDept = decoded?.department || decoded?.Department;
+
             const response = await axios.get(`${BASE_URL}/Students/students/approved`, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
-            setStudents(response.data);
+
+            // Filter only students in the same department as the faculty
+            const departmentStudents = response.data.filter(
+                (student) => student.department?.toLowerCase() === facultyDept?.toLowerCase()
+            );
+
+            setStudents(departmentStudents);
         } catch (err) {
             console.error('Failed to fetch students:', err);
-            setError('Failed to load students');
+            setError('Failed to load students.');
         } finally {
             setLoading(false);
         }
     };
 
-    const updateStatus = async (id, status) => {
-        try {
-            console.log('Updating:', id, status);
-
-            // This URL path depends on your ASP.NET controller routing
-            const response = await axios.put(
-                `${BASE_URL}/Students/updatestatus/${id}`, // <== If this gives 404, try the line below instead:
-                // `${BASE_URL}/Students/${id}/updatestatus`,
-                { status },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                }
-            );
-
-            console.log('Updated:', response.data);
-
-            // Remove the student from UI
-            setStudents((prev) => prev.filter((stu) => stu.id !== id));
-        } catch (err) {
-            console.error(`Failed to ${status} student:`, err);
-            alert(`Failed to ${status} student`);
-        }
-    };
+    const filteredStudents = students.filter((student) => {
+        const name = student.fullName?.toLowerCase() || '';
+        const email = student.email?.toLowerCase() || '';
+        return (
+            name.includes(searchTerm.toLowerCase()) ||
+            email.includes(searchTerm.toLowerCase())
+        );
+    });
 
     return (
         <div className="manage-students-container">
-            <h2>Approved Students</h2>
-            <p>List of all students approved by faculty</p>
+            <h2>Manage Approved Students</h2>
+            <p>Viewing only students from your department.</p>
+
+            <input
+                type="text"
+                className="search-input"
+                placeholder="🔍 Search by name or email"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
 
             {loading ? (
                 <p>Loading students...</p>
             ) : error ? (
                 <p className="error">{error}</p>
-            ) : students.length === 0 ? (
-                <p>No approved students found.</p>
+            ) : filteredStudents.length === 0 ? (
+                <p>No approved students found in your department.</p>
             ) : (
                 <div className="student-table">
                     <div className="table-header">
                         <span>Student Name</span>
-                        <span>Student ID</span>
+                        <span>College ID</span>
                         <span>Department</span>
                         <span>Role</span>
-                        <span>Status</span>
-                        <span>Actions</span>
                     </div>
 
-                    {students.map((student, idx) => (
-                        <div className="table-row" key={idx}>
-                            <div className="user-cell">
-                                <div className="avatar">
-                                    {(student.fullName?.slice(0, 2) || 'ST').toUpperCase()}
+                    {filteredStudents.map((student, idx) => {
+                        const fullName = student.fullName || 'No Name';
+                        const initials = fullName.slice(0, 2).toUpperCase();
+                        const email = student.email || 'No Email';
+                        const collegeId = student.collegeId || student.registrationNumber || 'N/A';
+                        const department = student.department || 'N/A';
+                        const role = student.role || 'Student';
+
+                        return (
+                            <div className="table-row" key={idx}>
+                                <div className="user-cell">
+                                    <div className="avatar">{initials}</div>
+                                    <div>
+                                        <strong>{fullName}</strong>
+                                        <div className="email">{email}</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <strong>{student.fullName || 'No Name'}</strong>
-                                    <div className="email">{student.email || 'No Email'}</div>
-                                </div>
+                                <span>{collegeId}</span>
+                                <span>{department}</span>
+                                <span>{role}</span>
                             </div>
-                            <span>{student.collegeId || 'N/A'}</span>
-                            <span>{student.department || 'N/A'}</span>
-                            <span>{student.role || 'Student'}</span>
-                            <span className={`badge ${student.status?.toLowerCase() || 'pending'}`}>
-                                {student.status || 'Pending'}
-                            </span>
-                            <span className="actions">
-                                <FaCheckCircle
-                                    className="approve-icon"
-                                    title="Approve"
-                                    onClick={() => updateStatus(student.id, 'Approved')}
-                                />
-                                <FaTimesCircle
-                                    className="reject-icon"
-                                    title="Reject"
-                                    onClick={() => updateStatus(student.id, 'Rejected')}
-                                />
-                            </span>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>

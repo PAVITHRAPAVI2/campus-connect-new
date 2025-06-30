@@ -1,146 +1,121 @@
-﻿import React, { useState, useEffect } from 'react';
-import './styles/StudentApproval.css';
-import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+﻿/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
+import './styles/usermanage.css';
 import axios from 'axios';
-import BASE_URL from "../config";
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import BASE_URL from '../config';
+
+// Helper to decode JWT and extract faculty department
+function decodeToken(token) {
+    try {
+        const payload = token.split('.')[1];
+        const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+        const decoded = JSON.parse(atob(base64));
+        return decoded.department || decoded.Department || '';
+    } catch (err) {
+        console.error('Error decoding token:', err);
+        return '';
+    }
+}
 
 const StudentApproval = () => {
     const [students, setStudents] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [roleFilter, setRoleFilter] = useState('All Roles');
-    const [statusFilter, setStatusFilter] = useState('All Status');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [department, setDepartment] = useState('');
 
     useEffect(() => {
-        fetchStudents();
-    }, [statusFilter]);
+        const token = localStorage.getItem('token');
+        const dept = decodeToken(token);
+        setDepartment(dept);
+        if (dept) fetchPendingStudents(dept);
+    }, []);
 
-    const fetchStudents = async () => {
+    const fetchPendingStudents = async (dept) => {
+        setLoading(true);
         try {
-            let url = '';
-
-            if (statusFilter === 'Approved') {
-                url = `${BASE_URL}/Students/students/approved`;
-            } else if (statusFilter === 'Pending') {
-                url = `${BASE_URL}/Students/students/pending`;
-            } else {
-                const approved = await axios.get(`${BASE_URL}/Students/students/approved`);
-                const pending = await axios.get(`${BASE_URL}/Students/students/pending`);
-                setStudents([...pending.data, ...approved.data]);
-                return;
-            }
-
-            const response = await axios.get(url);
-            setStudents(response.data);
-        } catch (error) {
-            console.error('Failed to fetch students:', error);
-        }
-    };
-
-    const getInitials = (name) => {
-        if (!name) return 'ST';
-        return name
-            .split(' ')
-            .map((w) => w[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
-    };
-
-    const updateStatus = async (id, newStatus) => {
-        try {
-            await axios.put(`${BASE_URL}/Students/students/${id}`, {
-                status: newStatus
+            const res = await axios.get(`${BASE_URL}/Students/students/pending/${dept}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
             });
-            fetchStudents();
-        } catch (error) {
-            console.error('Failed to update status:', error);
+            setStudents(res.data);
+        } catch (err) {
+            console.error('Error fetching students:', err);
+            setError('Failed to load students.');
+        } finally {
+            setLoading(false);
         }
     };
 
-    const filteredStudents = students.filter((student) => {
-        const name = student?.name?.toLowerCase() || '';
-        const email = student?.email?.toLowerCase() || '';
-        const matchSearch = name.includes(searchTerm.toLowerCase()) || email.includes(searchTerm.toLowerCase());
-        const matchRole = roleFilter === 'All Roles' || student.role === roleFilter;
-        const matchStatus = statusFilter === 'All Status' || student.status === statusFilter;
-        return matchSearch && matchRole && matchStatus;
-    });
+    const updateStatus = async (id, status) => {
+        try {
+            await axios.put(`${BASE_URL}/Faculties/approve-student/${id}`, { status }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            // Refresh list after update
+            fetchPendingStudents(department);
+        } catch (err) {
+            console.error('Failed to update student status:', err);
+            alert('Failed to update status. Please try again.');
+        }
+    };
 
     return (
-        <div className="approval-container">
-            <h2>Student Approval Management</h2>
-            <p className="subtitle">Manage all users in the system</p>
+        <div className="manage-students-container">
+            <h2>Student Approvals - {department}</h2>
+            <p>Only pending students from your department are shown.</p>
 
-            <div className="filters">
-                <input
-                    type="text"
-                    placeholder="🔍 Search Users"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
-                    <option>All Roles</option>
-                    <option>Student</option>
-                    <option>Faculty</option>
-                </select>
-                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                    <option>All Status</option>
-                    <option>Approved</option>
-                    <option>Pending</option>
-                </select>
-            </div>
+            {loading ? (
+                <p>Loading students...</p>
+            ) : error ? (
+                <p className="error">{error}</p>
+            ) : students.length === 0 ? (
+                <p>No pending students found.</p>
+            ) : (
+                <div className="student-table">
+                    <div className="table-header">
+                        <span>Name</span>
+                        <span>College ID</span>
+                        <span>Email</span>
+                        <span>Status</span>
+                        <span>Actions</span>
+                    </div>
 
-            <table className="approval-table">
-                <thead>
-                    <tr>
-                        <th>USER</th>
-                        <th>ROLE</th>
-                        <th>DEPARTMENT</th>
-                        <th>STATUS</th>
-                        <th>JOIN DATE</th>
-                        <th>ACTIONS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredStudents.map((student) => (
-                        <tr key={student.id}>
-                            <td>
-                                <div className="user-info">
-                                    <div className="avatar">{getInitials(student.name)}</div>
-                                    <div>
-                                        <div className="name">{student.name || 'No Name'}</div>
-                                        <div className="email">{student.email || 'No Email'}</div>
-                                    </div>
+                    {students.map((student) => (
+                        <div className="table-row" key={student.id}>
+                            <div className="user-cell">
+                                <div className="avatar">
+                                    {(student.fullName || 'ST').slice(0, 2).toUpperCase()}
                                 </div>
-                            </td>
-                            <td>{student.role || 'N/A'}</td>
-                            <td>{student.department || 'N/A'}</td>
-                            <td className={`status ${student.status?.toLowerCase() || 'unknown'}`}>
-                                {student.status || 'Unknown'}
-                            </td>
-                            <td>{student.joinDate?.slice(0, 10) || 'N/A'}</td>
-                            <td>
-                                {student.status === 'Pending' ? (
-                                    <div className="icon-buttons">
-                                        <FaCheckCircle
-                                            className="icon approve"
-                                            title="Approve"
-                                            onClick={() => updateStatus(student.id, 'Approved')}
-                                        />
-                                        <FaTimesCircle
-                                            className="icon reject"
-                                            title="Reject"
-                                            onClick={() => updateStatus(student.id, 'Rejected')}
-                                        />
-                                    </div>
-                                ) : (
-                                    <span>{student.status}</span>
-                                )}
-                            </td>
-                        </tr>
+                                <div>
+                                    <strong>{student.fullName || 'No Name'}</strong>
+                                    <div className="email">{student.email || 'No Email'}</div>
+                                </div>
+                            </div>
+                            <span>{student.collegeId || student.registrationNumber || 'N/A'}</span>
+                            <span>{student.email || 'N/A'}</span>
+                            <span className={`status ${student.status?.toLowerCase() || 'pending'}`}>
+                                {student.status || 'Pending'}
+                            </span>
+                            <span className="icon-buttons">
+                                <FaCheckCircle
+                                    className="icon approve"
+                                    title="Approve"
+                                    onClick={() => updateStatus(student.id, 'Approved')}
+                                />
+                                <FaTimesCircle
+                                    className="icon reject"
+                                    title="Reject"
+                                    onClick={() => updateStatus(student.id, 'Rejected')}
+                                />
+                            </span>
+                        </div>
                     ))}
-                </tbody>
-            </table>
+                </div>
+            )}
         </div>
     );
 };

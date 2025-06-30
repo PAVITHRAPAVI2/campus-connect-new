@@ -1,13 +1,10 @@
-﻿// src/App.jsx
-import React from 'react';
+﻿import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Public Pages
 import LandingPage from './pages/Faculty/LandingPage';
 import LoginPage from './components/LoginPage';
 import Register from './components/Register';
 
-// Faculty Protected Pages
 import DashboardLayout from './components/DashboardLayout';
 import NoticeBoard from './components/NoticeBoard';
 import StudentApproval from './components/StudentApproval';
@@ -15,23 +12,24 @@ import CommonGroupChat from './components/CommonGroupChat';
 import DepartmentGroupChat from './components/DepartmentGroupChat';
 import ManageStudents from './components/ManageStudents';
 
-// Route protection
 import ProtectedRoute from './components/ProtectedRoute';
+import FacultyDashboard from './components/Facultydashboard';
+
 
 const App = () => {
     return (
         <Router>
             <Routes>
-                {/* Public Routes */}
+                {/* Public */}
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<Register />} />
 
-                {/* Faculty Dashboard Routes */}
+                {/* Faculty Dashboard */}
                 <Route
                     path="/faculty"
                     element={
-                        <ProtectedRoute allowedRoles={["Faculty"]}>
+                        <ProtectedRoute allowedRoles={['Faculty']}>
                             <DashboardLayout />
                         </ProtectedRoute>
                     }
@@ -41,17 +39,22 @@ const App = () => {
                     <Route path="student-approvals" element={<StudentApproval />} />
                     <Route path="group-chat" element={<CommonGroupChat />} />
                     <Route path="manage-students" element={<ManageStudents />} />
+                    <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
+
                 </Route>
 
                 {/* Department Group Chat */}
                 <Route
                     path="/chat/department/:department"
                     element={
-                        <ProtectedRoute allowedRoles={["Faculty"]}>
+                        <ProtectedRoute allowedRoles={['Faculty']}>
                             <DepartmentGroupChat />
                         </ProtectedRoute>
                     }
                 />
+
+                {/* Catch-all */}
+                {/*<Route path="*" element={<h2>404 - Page Not Found</h2>} />*/}
             </Routes>
         </Router>
     );

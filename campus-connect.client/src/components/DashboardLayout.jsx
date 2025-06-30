@@ -16,9 +16,9 @@ const DashboardLayout = () => {
     }, [navigate]);
 
     const user = {
-        name: localStorage.getItem('userName') || 'User',
-        role: localStorage.getItem('userRole') || 'Unknown',
-        department: localStorage.getItem('userDepartment') || 'CSE',
+        name: localStorage.getItem('userName') ,
+        role: localStorage.getItem('userRole'),
+        department: localStorage.getItem('userDepartment') ,
     };
 
     const handleLogout = () => {

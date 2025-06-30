@@ -1,9 +1,13 @@
 ﻿import React, { useState, useEffect } from "react";
 import "./styles/NoticeBoard.css";
 import {
-    FiCalendar, FiEye, FiMessageSquare, FiPlus
+    FiCalendar,
+    FiEye,
+    FiMessageSquare,
+    FiPlus
 } from "react-icons/fi";
 import axios from "axios";
+import BASE_URL from "../config"; // ✅ no '/api' at the end
 
 const NoticeBoard = () => {
     const [search, setSearch] = useState("");
@@ -16,37 +20,43 @@ const NoticeBoard = () => {
     const [department, setDepartment] = useState("");
     const [content, setContent] = useState("");
 
-    // 🔄 Fetch Notices from API
+    // 🔄 Fetch Notices
     useEffect(() => {
-        axios.get("https://localhost:7144/api/Notices")
-            .then(res => setNotices(res.data))
-            .catch(err => console.error("Failed to load notices:", err));
+        const fetchNotices = async () => {
+            try {
+                const res = await axios.get(`${BASE_URL}/Notices`);
+                setNotices(res.data);
+            } catch (error) {
+                console.error("Failed to load notices:", error?.response?.data || error.message);
+            }
+        };
+        fetchNotices();
     }, []);
 
     // 📝 Handle Publish
-    const handlePublish = () => {
+    const handlePublish = async () => {
         const newNotice = {
             title,
             category,
             priority,
             department,
             content,
-            author: "Admin", // Change as needed
+            author: "Admin",
             date: new Date().toISOString(),
             views: 0,
             comments: 0
         };
 
-        axios.post("https://localhost:7144/api/Notices", newNotice)
-            .then(res => {
-                setNotices(prev => [res.data, ...prev]);
-                setShowModal(false);
-                setTitle(""); setCategory(""); setPriority(""); setDepartment(""); setContent("");
-            })
-            .catch(err => {
-                console.error("Failed to post notice:", err);
-                alert("Error creating notice");
-            });
+        try {
+            const res = await axios.post(`${BASE_URL}/Notices`, newNotice);
+            alert("Notice created successfully!");
+            setNotices(prev => [res.data, ...prev]);
+            setShowModal(false);
+            setTitle(""); setCategory(""); setPriority(""); setDepartment(""); setContent("");
+        } catch (error) {
+            console.error("Failed to post notice:", error?.response?.data || error.message);
+            alert("Error creating notice.");
+        }
     };
 
     return (
@@ -73,14 +83,10 @@ const NoticeBoard = () => {
                 </select>
                 <select>
                     <option>All Departments</option>
-                    <option>Computer Science</option>
-                    <option>IT Administration</option>
-                    <option>Tamil</option>
-                    <option>English</option>
+                    <option>Computer-Science</option>
                     <option>Maths</option>
                     <option>Physics</option>
                     <option>Chemistry</option>
-                    <option>Biology</option>
                 </select>
             </div>
 
@@ -145,13 +151,9 @@ const NoticeBoard = () => {
                             <select value={department} onChange={(e) => setDepartment(e.target.value)}>
                                 <option value="">-- Select Department --</option>
                                 <option value="Computer Science">Computer Science</option>
-                                <option value="IT Administration">IT Administration</option>
-                                <option value="Tamil">Tamil</option>
-                                <option value="English">English</option>
                                 <option value="Maths">Maths</option>
                                 <option value="Physics">Physics</option>
                                 <option value="Chemistry">Chemistry</option>
-                                <option value="Biology">Biology</option>
                             </select>
                         </div>
 

@@ -234,3 +234,37 @@
     color: green;
     margin-top: 10px;
 }
+
+
+.approve-icon {
+    color: green;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.reject-icon {
+    color: red;
+    cursor: pointer;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+    .badge.approved {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge.rejected {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge.pending {
+        background-color: #fef3c7;
+        color: #92400e;
+    }

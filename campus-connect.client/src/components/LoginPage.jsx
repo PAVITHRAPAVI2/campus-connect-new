@@ -33,39 +33,38 @@ const LoginPage = () => {
 
         try {
             setLoading(true);
+            setError('');
+
+            // ✅ Debug: Show what you're sending
+            console.log("Attempting login:", { collegeId, password });
+
             const response = await axios.post(`${BASE_URL}/Auth/login`, {
-                collegeId,
-                password,
+                collegeId,     // 🔁 Replace with `username` or `email` if required
+                password
             });
 
             const data = response.data;
-            console.log("Login Response:", data);
+            console.log("Login success:", data);
 
-            if (data?.token && data?.role) {
-                const userRole = data.role.toLowerCase();
-
-                if (userRole !== 'faculty') {
-                    setError('Only Faculty can login here.');
-                    return;
-                }
-
+            if (data?.token && data?.role?.toLowerCase() === 'faculty') {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('userId', data.userId);
                 localStorage.setItem('userName', data.userName || collegeId);
                 localStorage.setItem('userRole', data.role);
-                localStorage.setItem('userDepartment', data.department || 'CS');
-
+                localStorage.setItem('userDepartment', data.department );
                 navigate('/faculty');
             } else {
-                setError('Invalid login credentials');
+                setError('Only Faculty can login here.');
             }
         } catch (err) {
+            console.error("Login error:", err);
+
             if (axios.isAxiosError(err)) {
                 const errMsg =
                     err.response?.data?.message ||
                     (err.code === 'ERR_NETWORK'
-                        ? 'Network error: Cannot connect to the server.'
-                        : 'Login failed. Please try again.');
+                        ? 'Network error. Please check your internet connection.'
+                        : 'Login failed. Please check credentials.');
                 setError(errMsg);
             } else {
                 setError('Unexpected error occurred.');
@@ -80,7 +79,7 @@ const LoginPage = () => {
             <Navbar />
             <div className="login-wrapper">
                 <form className="login-container" onSubmit={handleSubmit}>
-                    <h2>Faculty Login</h2>
+                    <h2> Login</h2>
 
                     <input
                         type="text"
@@ -97,7 +96,7 @@ const LoginPage = () => {
                     />
 
                     <div className="forgot-password">
-                        <a href="#">Forgot Password?</a>
+                        <Link to="/forgot-password">Forgot Password?</Link>
                     </div>
 
                     <button type="submit" disabled={loading}>

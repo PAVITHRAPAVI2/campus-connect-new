@@ -1,9 +1,9 @@
 {
 "SpaProxyServer": {
-"ServerUrl": "https://localhost:56940",
+"ServerUrl": "https://localhost:50439",
 "RedirectUrl": "",
 "LaunchCommand": "npm run dev",
-"WorkingDirectory": "C:\\Users\\ASUS\\source\\repos\\campus-connect-current\\campus-connect.Server\\..\\campus-connect.client",
+"WorkingDirectory": "C:\\Users\\ADMIN\\source\\repos\\campus-connect-new\\campus-connect.Server\\..\\campus-connect.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }

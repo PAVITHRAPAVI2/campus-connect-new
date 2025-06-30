@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs
+/campus-connect.Server/obj/Debug/net8.0
+/campus-connect.slnLaunch.user
+/campus-connect.client/src/Pages/Admin/Admin
+/campus-connect.client/obj/Debug

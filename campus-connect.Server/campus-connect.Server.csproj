@@ -5,33 +5,16 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>campus_connect.Server</RootNamespace>
-    <UserSecretsId>35b16109-a855-4a18-8453-251a5ffe6725</UserSecretsId>
-    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <SpaRoot>..\campus-connect.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
-    <SpaProxyServerUrl>https://localhost:50439</SpaProxyServerUrl>
+    <SpaProxyServerUrl>https://localhost:56940</SpaProxyServerUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>8.*-*</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1-Preview.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>

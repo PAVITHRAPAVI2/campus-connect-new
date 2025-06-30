@@ -1,4 +1,4 @@
-@campus_connect.Server_HostAddress = http://localhost:5068
+@campus_connect.Server_HostAddress = http://localhost:5055
 
 GET {{campus_connect.Server_HostAddress}}/weatherforecast/
 Accept: application/json

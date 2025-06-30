@@ -1,0 +1,177 @@
+﻿/* Wrapper for full chat layout */
+.chat-wrapper {
+    display: flex;
+    height: 100%;
+}
+
+/* Sidebar for group list */
+.chat-groups {
+    width: 220px;
+    background: #f0f4f8;
+    border-right: 1px solid #ccc;
+    padding: 1rem;
+}
+
+/* Group buttons */
+.group-btn {
+    display: block;
+    width: 100%;
+    background: #e2e8f0;
+    border: none;
+    padding: 10px;
+    margin-bottom: 8px;
+    text-align: left;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+    .group-btn.active {
+        background-color: #10b981;
+        color: white;
+    }
+
+/* Chat message panel */
+.chat-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header at the top */
+.chat-header {
+    background-color: #10b981;
+    color: white;
+    padding: 12px 16px;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Scrollable messages area */
+.chat-box {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: #f9fafb;
+}
+
+/* Individual message styling */
+.chat-message {
+    margin-bottom: 12px;
+}
+
+    .chat-message.sent {
+        text-align: right;
+        color: green;
+    }
+
+    .chat-message.received {
+        text-align: left;
+        color: #111827;
+    }
+
+.sender {
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+/* ───────────── Chat Input Section ───────────── */
+
+/* Input container card */
+.chat-input-container {
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.05);
+    padding: 12px;
+}
+
+/* Input row */
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+    .chat-input input {
+        flex: 1;
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 20px;
+        outline: none;
+    }
+
+    .chat-input button {
+        padding: 10px 24px;
+        border: none;
+        border-radius: 20px;
+        background: #10b981;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .chat-input button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+/* ───────────── Modal for Edit Group ───────────── */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    width: 300px;
+    max-width: 90%;
+}
+
+    .modal h3 {
+        margin-bottom: 16px;
+    }
+
+    .modal label {
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .modal input[type="text"],
+    .modal input[type="checkbox"] {
+        margin-top: 6px;
+        width: 100%;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+    .modal-actions button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .modal-actions button:first-child {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .modal-actions button:last-child {
+            background-color: #e5e7eb;
+        }
